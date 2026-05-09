@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurora by Flui — Painel Web</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --base:#0A0A0F; --surf:#13131A; --card:#1C1C28;
+  --b1:rgba(255,255,255,0.07); --b2:rgba(255,255,255,0.13);
+  --green:#AAFF3E; --gd:rgba(170,255,62,0.10); --gb:rgba(170,255,62,0.25);
+  --purple:#7C3FCC; --pl:#B87DFF; --pd:rgba(124,63,204,0.15);
+  --amber:#FFB23E; --red:#FF5F5F; --blue:#5B9FFF;
+  --t1:#fff; --t2:#ccc; --t3:#999; --t4:#666; --t5:#333;
+  --sidebar:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--base);color:var(--t1);}
+
+/* ── ICO ── */
+.ico{display:inline-flex;align-items:center;justify-content:center;line-height:1;}
+.ico svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── SHELL ── */
+.shell{display:grid;grid-template-columns:var(--sidebar) 1fr;height:100vh;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sidebar{background:#0E0E18;border-right:0.5px solid var(--b1);display:flex;flex-direction:column;overflow-y:auto;}
+.sidebar::-webkit-scrollbar{display:none;}
+.logo-area{padding:20px 18px 18px;border-bottom:0.5px solid var(--b1);}
+.logo-row{display:flex;align-items:center;gap:10px;}
+.logo-dot{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--purple),var(--green));display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0;}
+.logo-name{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:var(--t1);}
+.logo-tag{font-size:10px;color:var(--t4);margin-top:1px;}
+.nav-section{padding:12px 0 4px;}
+.nav-label{font-size:10px;color:var(--t5);letter-spacing:.07em;padding:0 18px;margin-bottom:4px;font-weight:500;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 18px;font-size:13px;color:var(--t4);cursor:pointer;border-left:2px solid transparent;transition:all .15s;}
+.nav-item .ico{font-size:16px;}
+.nav-item:hover{color:var(--t2);background:rgba(255,255,255,.03);}
+.nav-item.active{color:var(--green);border-left-color:var(--green);background:rgba(170,255,62,.06);}
+.sidebar-bottom{margin-top:auto;padding:14px 18px;border-top:0.5px solid var(--b1);}
+.user-row{display:flex;align-items:center;gap:8px;}
+.uav{width:30px;height:30px;border-radius:50%;background:var(--pd);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--pl);flex-shrink:0;}
+.uname{font-size:12px;color:var(--t2);font-weight:500;}
+.urole{font-size:10px;color:var(--t5);}
+
+/* ── MAIN ── */
+.main{display:flex;flex-direction:column;overflow:hidden;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:0.5px solid var(--b1);flex-shrink:0;}
+.topbar-left .tb-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--t1);}
+.topbar-left .tb-sub{font-size:11px;color:var(--t4);margin-top:2px;}
+.tb-actions{display:flex;gap:8px;align-items:center;}
+.btn-p{background:var(--green);color:#0a1400;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;font-family:'Sora',sans-serif;display:flex;align-items:center;gap:6px;cursor:pointer;transition:opacity .15s;}
+.btn-p:hover{opacity:.88;}
+.btn-p .ico{font-size:14px;}
+.btn-g{background:rgba(255,255,255,.05);color:var(--t2);border:0.5px solid var(--b2);border-radius:8px;padding:8px 14px;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .15s;}
+.btn-g:hover{background:rgba(255,255,255,.09);}
+.btn-g .ico{font-size:14px;}
+
+/* ── CONTENT AREA ── */
+.content{flex:1;overflow-y:auto;padding:20px 24px;}
+.content::-webkit-scrollbar{width:4px;}
+.content::-webkit-scrollbar-track{background:transparent;}
+.content::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px;}
+
+/* ── SCREENS ── */
+.view{display:none;}
+.view.active{display:flex;flex-direction:column;gap:16px;}
+
+/* ── ATOMS ── */
+.badge{display:inline-flex;align-items:center;border-radius:100px;padding:3px 10px;font-size:10px;font-weight:600;}
+.bg{background:var(--gd);color:var(--green);border:0.5px solid var(--gb);}
+.ba{background:rgba(255,178,62,.1);color:var(--amber);border:0.5px solid rgba(255,178,62,.25);}
+.br{background:rgba(255,95,95,.1);color:var(--red);border:0.5px solid rgba(255,95,95,.2);}
+.bp{background:var(--pd);color:var(--pl);border:0.5px solid rgba(124,63,204,.3);}
+.panel{background:var(--surf);border:0.5px solid var(--b1);border-radius:14px;padding:16px;}
+.panel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.panel-title{font-size:13px;font-weight:600;color:var(--t1);}
+.panel-link{font-size:11px;color:var(--pl);cursor:pointer;font-weight:500;}
+.panel-link:hover{text-decoration:underline;}
+.divider{height:.5px;background:var(--b1);margin:10px 0;}
+.slabel{font-size:10px;color:var(--t5);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;font-weight:500;}
+
+/* ── METRIC CARDS ── */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.metric{background:var(--surf);border:0.5px solid var(--b1);border-radius:12px;padding:14px;}
+.ml{font-size:10px;color:var(--t4);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.ml .ico{font-size:12px;}
+.mv{font-size:24px;font-weight:800;font-family:'Sora',sans-serif;color:var(--t1);line-height:1;}
+.mv.g{color:var(--green);}
+.mv.p{color:var(--pl);}
+.md{font-size:10px;margin-top:4px;}
+.md.up{color:var(--green);}
+.md.nt{color:var(--t5);}
+
+/* ── 2-COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+
+/* ── MINI MAP ── */
+.mmap{background:#1a1f2e;border-radius:10px;height:150px;position:relative;overflow:hidden;}
+.mr{position:absolute;background:#242836;}
+.msm{position:absolute;background:#1e2230;}
+.mbl{position:absolute;background:#161b28;border-radius:3px;}
+.mpin{position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid var(--base);}
+
+/* ── STATUS LIST ── */
+.sitem{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid var(--b1);}
+.sitem:last-child{border-bottom:none;}
+.sdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sname{flex:1;}
+.sn{font-size:12px;color:var(--t2);font-weight:500;}
+.sa{font-size:10px;color:var(--t5);}
+
+/* ── BAR CHART ── */
+.barchart{display:flex;align-items:flex-end;gap:5px;height:90px;}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.bbar{width:100%;border-radius:3px 3px 0 0;}
+.blbl{font-size:9px;color:var(--t5);}
+.bval{font-size:9px;color:var(--t4);}
+
+/* ── DONUT ── */
+.donut-wrap{display:flex;gap:16px;align-items:center;}
+.donut-leg{display:flex;flex-direction:column;gap:7px;flex:1;}
+.dleg{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--t3);}
+.dleg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dleg-val{font-weight:600;margin-left:auto;}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{text-align:left;color:var(--t5);font-weight:500;padding:10px 12px;border-bottom:.5px solid var(--b1);background:#0f0f18;font-size:11px;}
+td{padding:10px 12px;color:var(--t2);border-bottom:.5px solid rgba(255,255,255,.04);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);cursor:pointer;}
+tr.sel td{background:rgba(170,255,62,.04);}
+.td-name{font-weight:600;color:var(--t1);}
+.td-addr{font-size:10px;color:var(--t5);margin-top:2px;}
+.td-rating{color:var(--pl);font-weight:600;}
+.act-btn{background:rgba(255,255,255,.04);border:.5px solid var(--b1);border-radius:6px;padding:4px 9px;font-size:10px;color:var(--t3);cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:background .15s;}
+.act-btn:hover{background:rgba(255,255,255,.09);}
+.act-btn .ico{font-size:12px;}
+
+/* ── REVIEW ITEMS ── */
+.rev-item{display:flex;gap:10px;padding:10px 0;border-bottom:.5px solid var(--b1);}
+.rev-item:last-child{border-bottom:none;}
+.rav{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+.rbody{flex:1;}
+.rtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
+.ruser{font-size:12px;font-weight:600;color:var(--t2);}
+.rpoint{font-size:10px;color:var(--t5);}
+.rtext{font-size:11px;color:var(--t4);line-height:1.5;}
+.rcrit{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.cchip{background:rgba(255,255,255,.04);border:.5px solid var(--b1);border-radius:6px;padding:2px 8px;font-size:9px;color:var(--t4);}
+.cchip span{margin-left:3px;}
+
+/* ── DETAIL SIDE PANEL ── */
+.list-layout{display:grid;grid-template-columns:1fr 300px;gap:14px;}
+.detail-side{background:var(--surf);border:.5px solid var(--b1);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;position:sticky;top:0;}
+.ds-name{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:var(--t1);}
+.ds-addr{font-size:11px;color:var(--t4);margin-top:2px;}
+.ds-stat{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ds-box{background:rgba(255,255,255,.03);border:.5px solid var(--b1);border-radius:8px;padding:10px;}
+.ds-bl{font-size:10px;color:var(--t5);margin-bottom:3px;}
+.ds-bv{font-size:16px;font-weight:700;font-family:'Sora',sans-serif;color:var(--t1);}
+.ds-bv.g{color:var(--green);}
+.ds-bv.p{color:var(--pl);}
+.crow{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:.5px solid rgba(255,255,255,.04);}
+.crow:last-child{border-bottom:none;}
+.cdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.cinfo{flex:1;}
+.cnn{font-size:11px;color:var(--t2);font-weight:500;}
+.csp{font-size:10px;color:var(--t5);}
+.cst{font-size:11px;font-weight:600;}
+.tag-row{display:flex;gap:5px;flex-wrap:wrap;}
+.tag{background:rgba(255,255,255,.04);border:.5px solid var(--b1);border-radius:6px;padding:3px 8px;font-size:10px;color:var(--t3);}
+
+/* ── FORM ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.wide{grid-column:span 2;}
+.flabel{font-size:11px;color:var(--t3);font-weight:500;}
+.finput{background:var(--surf);border:.5px solid var(--b2);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--t1);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;}
+.finput:focus{border-color:rgba(170,255,62,.4);}
+.finput.active{border-color:rgba(170,255,62,.35);color:var(--t1);}
+.fchips{display:flex;gap:6px;flex-wrap:wrap;}
+.fchip{border-radius:100px;padding:6px 13px;font-size:11px;font-weight:600;cursor:pointer;border:.5px solid;transition:all .15s;}
+.fchip.on{background:var(--green);color:#0a1400;border-color:var(--green);}
+.fchip.off{background:rgba(255,255,255,.04);color:var(--t3);border-color:var(--b1);}
+.fmap{background:#1a1f2e;border-radius:10px;height:200px;position:relative;overflow:hidden;}
+.fmap-pin{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);}
+.fmap-pulse{width:24px;height:24px;border-radius:50%;background:rgba(170,255,62,.15);display:flex;align-items:center;justify-content:center;}
+.fmap-dot{width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--base);}
+.fmap-hint{position:absolute;bottom:8px;right:8px;background:rgba(14,14,22,.9);border:.5px solid var(--gb);border-radius:6px;padding:4px 9px;font-size:10px;color:var(--green);}
+
+/* ── HEATMAP ── */
+.heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.hcell{height:14px;border-radius:2px;}
+
+/* ── RATINGS PANEL ── */
+.score-grid{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;}
+.big-score{text-align:center;}
+.bsn{font-size:48px;font-weight:800;font-family:'Sora',sans-serif;color:var(--pl);line-height:1;}
+.bss{font-size:18px;color:var(--pl);margin-top:4px;}
+.bsc{font-size:10px;color:var(--t5);margin-top:2px;}
+.crit-list{display:flex;flex-direction:column;gap:9px;}
+.crit-row{display:flex;align-items:center;gap:10px;}
+.crit-name{font-size:11px;color:var(--t3);width:100px;flex-shrink:0;}
+.crit-bar{flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;}
+.crit-fill{height:100%;border-radius:3px;}
+.crit-val{font-size:11px;font-weight:600;width:24px;text-align:right;}
+.dist-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.dist-lbl{font-size:11px;color:var(--t4);width:12px;text-align:right;}
+.dist-bg{flex:1;height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;}
+.dist-fill{height:100%;border-radius:3px;background:var(--pl);}
+.dist-cnt{font-size:10px;color:var(--t5);width:28px;}
+.top-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid var(--b1);}
+.top-item:last-child{border-bottom:none;}
+.top-rank{font-size:11px;font-weight:700;color:var(--t5);width:14px;}
+.top-name{flex:1;font-size:12px;color:var(--t2);}
+.top-bar{width:56px;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;}
+.top-fill{height:100%;background:var(--purple);border-radius:2px;}
+.top-score{font-size:12px;font-weight:700;color:var(--pl);}
+
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-top:.5px solid var(--b1);}
+.pag-nav{font-size:11px;color:var(--t4);cursor:pointer;}
+.pag-nums{display:flex;gap:4px;}
+.pnum{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer;}
+.pnum.on{background:var(--green);color:#0a1400;font-weight:700;}
+.pnum.off{background:rgba(255,255,255,.04);color:var(--t4);}
+
+/* ── ALERT ── */
+.alert{background:rgba(255,95,95,.08);border:.5px solid rgba(255,95,95,.2);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--red);}
+.alert .ico{font-size:16px;flex-shrink:0;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="logo-area">
+      <div class="logo-row">
+        <div class="logo-dot"><span class="ico"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span></div>
+        <div><div class="logo-name">aurora</div><div class="logo-tag">Painel administrativo · Flui</div></div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Principal</div>
+      <div class="nav-item active" data-view="dashboard" onclick="goView('dashboard',this)">
+        <span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span> Dashboard
+      </div>
+      <div class="nav-item" data-view="pontos" onclick="goView('pontos',this)">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 11m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></svg></span> Pontos de recarga
+      </div>
+      <div class="nav-item" data-view="avaliacoes" onclick="goView('avaliacoes',this)">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span> Avaliações
+      </div>
+      <div class="nav-item" data-view="relatorios" onclick="goView('relatorios',this)">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 16l4-4 4 4 4-6"/></svg></span> Relatórios
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Gestão</div>
+      <div class="nav-item" data-view="cadastro" onclick="goView('cadastro',this)">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span> Novo ponto
+      </div>
+      <div class="nav-item">
+        <span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></span> Configurações
+      </div>
+    </div>
+    <div class="sidebar-bottom">
+      <div class="user-row">
+        <div class="uav">FS</div>
+        <div style="flex:1;"><div class="uname">Flui Staff</div><div class="urole">Administrador</div></div>
+        <span class="ico" style="font-size:15px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="M14 8v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2M7 12h14M18 9l3 3-3 3"/></svg></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <div class="main">
+
+    <!-- topbar dinâmica -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="tb-title" id="tb-title">Dashboard</div>
+        <div class="tb-sub" id="tb-sub">Visão geral da rede · atualizado agora</div>
+      </div>
+      <div class="tb-actions" id="tb-actions">
+        <button class="btn-g"><span class="ico"><svg viewBox="0 0 24 24"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg></span> Exportar</button>
+        <button class="btn-p" onclick="goView('cadastro',null)"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span> Novo ponto</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══════════ VIEW: DASHBOARD ══════════ -->
+      <div class="view active" id="view-dashboard">
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="ml"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 11m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></svg></span> Total de pontos</div>
+            <div class="mv">48</div><div class="md up">↑ +3 este mês</div>
+          </div>
+          <div class="metric">
+            <div class="ml"><span class="ico"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span> Carregadores livres</div>
+            <div class="mv g">127</div><div class="md nt">de 192 total</div>
+          </div>
+          <div class="metric">
+            <div class="ml"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span> Avaliação média</div>
+            <div class="mv p">4.2</div><div class="md up">↑ +0.1 vs mês ant.</div>
+          </div>
+          <div class="metric">
+            <div class="ml"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2M16 3.13a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.87"/></svg></span> Usuários ativos</div>
+            <div class="mv">1.840</div><div class="md up">↑ +12% semana</div>
+          </div>
+        </div>
+
+        <div class="alert">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0zM12 9v4M12 17h.01"/></svg></span>
+          <span><strong>Flui Portão</strong> está offline há 4 dias — revisão necessária. <span style="color:var(--t3);margin-left:6px;cursor:pointer;" onclick="goView('pontos',null)">Ver ponto →</span></span>
+        </div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-hdr"><span class="panel-title">Mapa da rede</span><span class="panel-link" onclick="goView('pontos',null)">ver todos →</span></div>
+            <div class="mmap">
+              <div class="mr" style="top:45px;left:0;right:0;height:18px;"></div>
+              <div class="mr" style="top:95px;left:0;right:0;height:12px;"></div>
+              <div class="mr" style="top:0;bottom:0;left:52px;width:18px;"></div>
+              <div class="mr" style="top:0;bottom:0;left:144px;width:18px;"></div>
+              <div class="mr" style="top:0;bottom:0;left:236px;width:18px;"></div>
+              <div class="msm" style="top:0;bottom:0;left:108px;width:12px;"></div>
+              <div class="msm" style="top:0;bottom:0;left:200px;width:12px;"></div>
+              <div class="msm" style="top:26px;left:0;right:0;height:12px;"></div>
+              <div class="mbl" style="top:6px;left:6px;width:40px;height:34px;"></div>
+              <div class="mbl" style="top:6px;left:76px;width:26px;height:34px;"></div>
+              <div class="mbl" style="top:6px;left:126px;width:12px;height:34px;"></div>
+              <div class="mbl" style="top:6px;left:168px;width:26px;height:34px;"></div>
+              <div class="mbl" style="top:6px;left:260px;width:56px;height:34px;"></div>
+              <div class="mbl" style="top:69px;left:6px;width:40px;height:20px;"></div>
+              <div class="mbl" style="top:69px;left:76px;width:26px;height:20px;"></div>
+              <div class="mbl" style="top:69px;left:168px;width:26px;height:20px;"></div>
+              <div class="mbl" style="top:69px;left:260px;width:56px;height:20px;"></div>
+              <div class="mbl" style="top:113px;left:6px;width:40px;height:34px;"></div>
+              <div class="mbl" style="top:113px;left:76px;width:62px;height:34px;"></div>
+              <div class="mbl" style="top:113px;left:168px;width:62px;height:34px;"></div>
+              <div class="mbl" style="top:113px;left:260px;width:56px;height:34px;"></div>
+              <div class="mpin" style="background:var(--green);top:34px;left:96px;"></div>
+              <div class="mpin" style="background:var(--green);top:78px;left:186px;"></div>
+              <div class="mpin" style="background:var(--amber);top:24px;left:248px;"></div>
+              <div class="mpin" style="background:var(--green);top:108px;left:78px;"></div>
+              <div class="mpin" style="background:var(--red);top:98px;left:196px;"></div>
+              <div class="mpin" style="background:var(--green);top:50px;left:272px;"></div>
+            </div>
+            <div style="display:flex;gap:14px;margin-top:10px;">
+              <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div>38 livres</div>
+              <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);"><div style="width:7px;height:7px;border-radius:50%;background:var(--amber);"></div>7 ocupados</div>
+              <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);"><div style="width:7px;height:7px;border-radius:50%;background:var(--red);"></div>3 offline</div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-hdr"><span class="panel-title">Status da rede agora</span><span style="font-size:10px;color:var(--green);">● ao vivo</span></div>
+            <div class="sitem"><div class="sdot" style="background:var(--green);"></div><div class="sname"><div class="sn">Flui Batel</div><div class="sa">3/4 livres · CCS2 150kW</div></div><span class="badge bg">Livre</span></div>
+            <div class="sitem"><div class="sdot" style="background:var(--green);"></div><div class="sname"><div class="sn">Flui Água Verde</div><div class="sa">4/4 livres · CCS2 150kW</div></div><span class="badge bg">Livre</span></div>
+            <div class="sitem"><div class="sdot" style="background:var(--amber);"></div><div class="sname"><div class="sn">Flui Centro</div><div class="sa">1/2 livres · CHAdeMO</div></div><span class="badge ba">Parcial</span></div>
+            <div class="sitem"><div class="sdot" style="background:var(--red);"></div><div class="sname"><div class="sn">Flui Portão</div><div class="sa">0/3 livres · offline</div></div><span class="badge br">Offline</span></div>
+            <div class="sitem"><div class="sdot" style="background:var(--green);"></div><div class="sname"><div class="sn">Flui Shopping Mueller</div><div class="sa">2/2 livres · CCS2 150kW</div></div><span class="badge bg">Livre</span></div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-hdr"><span class="panel-title">Recargas por dia — últimos 7 dias</span></div>
+            <div class="barchart">
+              <div class="bcol"><div class="bval">82</div><div class="bbar" style="height:62%;background:rgba(124,63,204,.5);"></div><div class="blbl">seg</div></div>
+              <div class="bcol"><div class="bval">94</div><div class="bbar" style="height:71%;background:rgba(124,63,204,.5);"></div><div class="blbl">ter</div></div>
+              <div class="bcol"><div class="bval">78</div><div class="bbar" style="height:59%;background:rgba(124,63,204,.5);"></div><div class="blbl">qua</div></div>
+              <div class="bcol"><div class="bval">110</div><div class="bbar" style="height:83%;background:rgba(124,63,204,.5);"></div><div class="blbl">qui</div></div>
+              <div class="bcol"><div class="bval">132</div><div class="bbar" style="height:100%;background:var(--green);"></div><div class="blbl">sex</div></div>
+              <div class="bcol"><div class="bval">118</div><div class="bbar" style="height:89%;background:rgba(124,63,204,.5);"></div><div class="blbl">sáb</div></div>
+              <div class="bcol"><div class="bval">96</div><div class="bbar" style="height:73%;background:rgba(124,63,204,.5);"></div><div class="blbl">dom</div></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-hdr"><span class="panel-title">Últimas avaliações</span><span class="panel-link" onclick="goView('avaliacoes',null)">ver todas →</span></div>
+            <div class="rev-item">
+              <div class="rav" style="background:var(--pd);color:var(--pl);">MR</div>
+              <div class="rbody"><div class="rtop"><span class="ruser">Mariana R.</span><span style="font-size:11px;color:var(--pl);">★★★★★</span></div><div class="rpoint">Flui Batel · há 3h</div><div class="rtext">Ponto impecável. Carregou em 20 min.</div></div>
+            </div>
+            <div class="rev-item">
+              <div class="rav" style="background:rgba(170,255,62,.1);color:var(--green);">GT</div>
+              <div class="rbody"><div class="rtop"><span class="ruser">Gabriel T.</span><span style="font-size:11px;color:var(--amber);">★★★☆☆</span></div><div class="rpoint">Flui Centro · há 5h</div><div class="rtext">Ponto 2 fora de operação há dois dias.</div></div>
+            </div>
+            <div class="rev-item">
+              <div class="rav" style="background:rgba(255,95,95,.1);color:#FF8F8F;">LP</div>
+              <div class="rbody"><div class="rtop"><span class="ruser">Laura P.</span><span style="font-size:11px;color:var(--pl);">★★★★☆</span></div><div class="rpoint">Flui Mueller · há 8h</div><div class="rtext">Wi-Fi não funcionou, mas recarga ótima.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-hdr"><span class="panel-title">Pontos que precisam de atenção</span><span class="panel-link" onclick="goView('pontos',null)">ver listagem completa →</span></div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr><th>Ponto</th><th>Status</th><th>Carregadores</th><th>Avaliação</th><th>Última revisão</th><th></th></tr></thead>
+              <tbody>
+                <tr onclick="goView('pontos',null)"><td><div class="td-name">Flui Portão</div><div class="td-addr">Av. República Argentina</div></td><td><span class="badge br">Offline</span></td><td style="color:var(--red);font-weight:600;">0 / 3</td><td class="td-rating">★ 3.2</td><td style="color:var(--t5);">há 4 dias</td><td><button class="act-btn" onclick="goView('cadastro',null);event.stopPropagation()"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span> Editar</button></td></tr>
+                <tr onclick="goView('pontos',null)"><td><div class="td-name">Flui Centro</div><div class="td-addr">R. XV de Novembro</div></td><td><span class="badge ba">Parcial</span></td><td style="color:var(--amber);font-weight:600;">1 / 2</td><td class="td-rating">★ 3.8</td><td style="color:var(--t5);">há 2 dias</td><td><button class="act-btn" onclick="goView('cadastro',null);event.stopPropagation()"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span> Editar</button></td></tr>
+                <tr onclick="goView('pontos',null)"><td><div class="td-name">Flui Capão Raso</div><div class="td-addr">R. Eng. Costa Barros</div></td><td><span class="badge ba">Parcial</span></td><td style="color:var(--amber);font-weight:600;">2 / 4</td><td class="td-rating">★ 4.0</td><td style="color:var(--t5);">há 1 dia</td><td><button class="act-btn"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span> Editar</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ VIEW: PONTOS ══════════ -->
+      <div class="view" id="view-pontos">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <div style="flex:1;min-width:200px;background:var(--surf);border:.5px solid var(--b2);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+            <span class="ico" style="color:var(--t4);font-size:16px;"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></span>
+            <span style="font-size:13px;color:var(--t4);">Buscar por nome ou endereço...</span>
+          </div>
+          <div style="background:var(--surf);border:.5px solid var(--b1);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--t3);display:flex;align-items:center;gap:6px;cursor:pointer;">
+            <span class="ico" style="font-size:14px;"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span> Tipo: Todos
+          </div>
+          <div style="background:var(--surf);border:.5px solid var(--b1);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--t3);cursor:pointer;">Cidade: Curitiba</div>
+          <div style="display:flex;gap:5px;">
+            <div style="background:var(--gd);border:.5px solid var(--gb);border-radius:100px;padding:5px 12px;font-size:11px;color:var(--green);font-weight:600;cursor:pointer;">Todos (48)</div>
+            <div style="background:rgba(255,255,255,.03);border:.5px solid var(--b1);border-radius:100px;padding:5px 12px;font-size:11px;color:var(--t4);cursor:pointer;">Livres (38)</div>
+            <div style="background:rgba(255,255,255,.03);border:.5px solid var(--b1);border-radius:100px;padding:5px 12px;font-size:11px;color:var(--t4);cursor:pointer;">Offline (3)</div>
+          </div>
+        </div>
+
+        <div class="list-layout">
+          <div class="panel" style="padding:0;overflow:hidden;">
+            <div style="padding:12px 14px;border-bottom:.5px solid var(--b1);display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;font-weight:600;color:var(--t1);">Lista de pontos</span>
+              <span style="font-size:11px;color:var(--t5);">mostrando 6 de 48</span>
+            </div>
+            <div class="tbl-wrap">
+              <table>
+                <thead><tr><th style="width:36%;">Ponto</th><th>Status</th><th>Carregadores</th><th>Avaliação</th><th>Potência</th><th></th></tr></thead>
+                <tbody>
+                  <tr class="sel"><td><div class="td-name">Flui Batel</div><div class="td-addr">Av. do Batel, 1230</div></td><td><span class="badge bg">Livre</span></td><td style="color:var(--green);font-weight:600;">3 / 4</td><td class="td-rating">★ 4.1</td><td style="color:var(--t2);">150 kW</td><td><button class="act-btn" onclick="goView('cadastro',null)"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span></button></td></tr>
+                  <tr><td><div class="td-name">Flui Água Verde</div><div class="td-addr">R. Dep. Westphalen, 400</div></td><td><span class="badge bg">Livre</span></td><td style="color:var(--green);font-weight:600;">4 / 4</td><td class="td-rating">★ 4.4</td><td style="color:var(--t2);">150 kW</td><td><button class="act-btn"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span></button></td></tr>
+                  <tr><td><div class="td-name">Flui Centro</div><div class="td-addr">R. XV de Novembro, 700</div></td><td><span class="badge ba">Parcial</span></td><td style="color:var(--amber);font-weight:600;">1 / 2</td><td class="td-rating">★ 3.8</td><td style="color:var(--t2);">50 kW</td><td><button class="act-btn"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span></button></td></tr>
+                  <tr><td><div class="td-name">Flui Portão</div><div class="td-addr">Av. República Argentina</div></td><td><span class="badge br">Offline</span></td><td style="color:var(--red);font-weight:600;">0 / 3</td><td class="td-rating">★ 3.2</td><td style="color:var(--t2);">150 kW</td><td><button class="act-btn" onclick="goView('cadastro',null)"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span></button></td></tr>
+                  <tr><td><div class="td-name">Flui Shopping Mueller</div><div class="td-addr">Av. Paraná, 1600</div></td><td><span class="badge bg">Livre</span></td><td style="color:var(--green);font-weight:600;">2 / 2</td><td class="td-rating">★ 4.6</td><td style="color:var(--t2);">150 kW</td><td><button class="act-btn"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span></button></td></tr>
+                  <tr><td><div class="td-name">Flui Capão Raso</div><div class="td-addr">R. Eng. Costa Barros, 200</div></td><td><span class="badge ba">Parcial</span></td><td style="color:var(--amber);font-weight:600;">2 / 4</td><td class="td-rating">★ 4.0</td><td style="color:var(--t2);">250 kW</td><td><button class="act-btn"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span></button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination">
+              <span class="pag-nav">← anterior</span>
+              <div class="pag-nums"><div class="pnum on">1</div><div class="pnum off">2</div><div class="pnum off">3</div><div class="pnum off">...</div><div class="pnum off">8</div></div>
+              <span class="pag-nav">próxima →</span>
+            </div>
+          </div>
+
+          <div class="detail-side">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div><div class="ds-name">Flui Batel</div><div class="ds-addr">Av. do Batel, 1230 · Curitiba</div></div>
+                <span class="badge bg">Livre</span>
+              </div>
+            </div>
+            <div class="mmap" style="height:100px;">
+              <div class="mr" style="top:40px;left:0;right:0;height:16px;"></div>
+              <div class="mr" style="top:0;bottom:0;left:55px;width:16px;"></div>
+              <div class="mr" style="top:0;bottom:0;left:152px;width:16px;"></div>
+              <div class="mr" style="top:0;bottom:0;left:238px;width:12px;"></div>
+              <div class="mbl" style="top:6px;left:6px;width:43px;height:28px;"></div>
+              <div class="mbl" style="top:6px;left:77px;width:69px;height:28px;"></div>
+              <div class="mbl" style="top:6px;left:174px;width:58px;height:28px;"></div>
+              <div class="mbl" style="top:62px;left:6px;width:43px;height:32px;"></div>
+              <div class="mbl" style="top:62px;left:77px;width:69px;height:32px;"></div>
+              <div class="mbl" style="top:62px;left:174px;width:58px;height:32px;"></div>
+              <div style="position:absolute;width:20px;height:20px;border-radius:50%;background:rgba(170,255,62,.15);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+              <div class="mpin" style="background:var(--green);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+            </div>
+            <div class="ds-stat">
+              <div class="ds-box"><div class="ds-bl">Disponíveis</div><div class="ds-bv g">3 / 4</div></div>
+              <div class="ds-box"><div class="ds-bl">Avaliação</div><div class="ds-bv p">★ 4.1</div></div>
+              <div class="ds-box"><div class="ds-bl">Potência</div><div class="ds-bv" style="font-size:14px;">150 kW</div></div>
+              <div class="ds-box"><div class="ds-bl">Recargas/mês</div><div class="ds-bv g">312</div></div>
+            </div>
+            <div>
+              <div class="slabel">Carregadores</div>
+              <div class="crow"><div class="cdot" style="background:var(--green);"></div><div class="cinfo"><div class="cnn">Ponto 1 · CCS2</div><div class="csp">150 kW</div></div><span class="cst" style="color:var(--green);">Livre</span></div>
+              <div class="crow"><div class="cdot" style="background:var(--green);"></div><div class="cinfo"><div class="cnn">Ponto 2 · CCS2</div><div class="csp">150 kW</div></div><span class="cst" style="color:var(--green);">Livre</span></div>
+              <div class="crow"><div class="cdot" style="background:var(--amber);"></div><div class="cinfo"><div class="cnn">Ponto 3 · CHAdeMO</div><div class="csp">50 kW</div></div><span class="cst" style="color:var(--amber);">Ocupado</span></div>
+              <div class="crow"><div class="cdot" style="background:var(--green);"></div><div class="cinfo"><div class="cnn">Ponto 4 · Type 2</div><div class="csp">22 kW</div></div><span class="cst" style="color:var(--green);">Livre</span></div>
+            </div>
+            <div>
+              <div class="slabel">Conectores</div>
+              <div class="tag-row"><span class="tag">CCS2</span><span class="tag">CHAdeMO</span><span class="tag">Type 2</span></div>
+            </div>
+            <button class="btn-p" style="width:100%;" onclick="goView('cadastro',null)"><span class="ico"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span> Editar ponto</button>
+            <button style="width:100%;background:rgba(255,95,95,.08);border:.5px solid rgba(255,95,95,.2);color:var(--red);border-radius:8px;padding:9px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></span> Desativar ponto</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ VIEW: AVALIAÇÕES ══════════ -->
+      <div class="view" id="view-avaliacoes">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <div style="background:var(--surf);border:.5px solid var(--b1);border-radius:8px;padding:7px 12px;font-size:12px;color:var(--t3);display:flex;align-items:center;gap:6px;cursor:pointer;"><span class="ico" style="font-size:14px;"><svg viewBox="0 0 24 24"><path d="M12 11m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></svg></span> Ponto: Todos</div>
+          <div style="background:var(--surf);border:.5px solid var(--b1);border-radius:8px;padding:7px 12px;font-size:12px;color:var(--t3);cursor:pointer;">Período: últimos 30 dias</div>
+          <div style="background:var(--surf);border:.5px solid var(--b1);border-radius:8px;padding:7px 12px;font-size:12px;color:var(--t3);cursor:pointer;">Nota: Todas</div>
+          <div style="margin-left:auto;display:flex;gap:5px;">
+            <div style="background:var(--gd);border:.5px solid var(--gb);border-radius:100px;padding:5px 12px;font-size:11px;color:var(--green);font-weight:600;cursor:pointer;">Todos</div>
+            <div style="background:rgba(255,255,255,.03);border:.5px solid var(--b1);border-radius:100px;padding:5px 12px;font-size:11px;color:var(--t4);cursor:pointer;">Positivos</div>
+            <div style="background:rgba(255,255,255,.03);border:.5px solid var(--b1);border-radius:100px;padding:5px 12px;font-size:11px;color:var(--t4);cursor:pointer;">Críticos</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-hdr"><span class="panel-title">Avaliações recentes</span></div>
+            <div class="score-grid" style="margin-bottom:16px;">
+              <div class="big-score"><div class="bsn">4.2</div><div class="bss">★★★★☆</div><div class="bsc">847 avaliações</div></div>
+              <div class="crit-list">
+                <div class="crit-row"><span class="crit-name">Disponibilidade</span><div class="crit-bar"><div class="crit-fill" style="width:88%;background:var(--green);"></div></div><span class="crit-val" style="color:var(--green);">4.4</span></div>
+                <div class="crit-row"><span class="crit-name">Qualidade</span><div class="crit-bar"><div class="crit-fill" style="width:82%;background:var(--green);"></div></div><span class="crit-val" style="color:var(--green);">4.1</span></div>
+                <div class="crit-row"><span class="crit-name">Comodidades</span><div class="crit-bar"><div class="crit-fill" style="width:74%;background:var(--pl);"></div></div><span class="crit-val" style="color:var(--pl);">3.7</span></div>
+                <div class="crit-row"><span class="crit-name">Sinalização</span><div class="crit-bar"><div class="crit-fill" style="width:84%;background:var(--green);"></div></div><span class="crit-val" style="color:var(--green);">4.2</span></div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="rev-item">
+              <div class="rav" style="background:var(--pd);color:var(--pl);">MR</div>
+              <div class="rbody"><div class="rtop"><span class="ruser">Mariana R.</span><span style="font-size:11px;color:var(--pl);">★★★★★</span></div><div class="rpoint">Flui Batel · há 3h</div><div class="rtext">Ponto impecável. Carregou meu Model 3 em menos de 20 min.</div><div class="rcrit"><div class="cchip">Disponibilidade<span style="color:var(--green);">5</span></div><div class="cchip">Qualidade<span style="color:var(--green);">5</span></div><div class="cchip">Comodidades<span style="color:var(--green);">5</span></div></div></div>
+            </div>
+            <div class="rev-item">
+              <div class="rav" style="background:rgba(170,255,62,.1);color:var(--green);">GT</div>
+              <div class="rbody"><div class="rtop"><span class="ruser">Gabriel T.</span><span style="font-size:11px;color:var(--amber);">★★★☆☆</span></div><div class="rpoint">Flui Centro · há 5h</div><div class="rtext">Ponto 2 fora de operação há dois dias. Precisam manter manutenção.</div><div class="rcrit"><div class="cchip">Disponibilidade<span style="color:var(--red);">2</span></div><div class="cchip">Qualidade<span style="color:var(--amber);">3</span></div><div class="cchip">Comodidades<span style="color:var(--green);">4</span></div></div></div>
+            </div>
+            <div class="rev-item">
+              <div class="rav" style="background:rgba(255,95,95,.1);color:#FF8F8F;">LP</div>
+              <div class="rbody"><div class="rtop"><span class="ruser">Laura P.</span><span style="font-size:11px;color:var(--pl);">★★★★☆</span></div><div class="rpoint">Flui Mueller · há 8h</div><div class="rtext">Wi-Fi não funcionou hoje, mas a recarga foi rápida.</div><div class="rcrit"><div class="cchip">Disponibilidade<span style="color:var(--green);">5</span></div><div class="cchip">Qualidade<span style="color:var(--green);">4</span></div><div class="cchip">Comodidades<span style="color:var(--amber);">3</span></div></div></div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div class="panel">
+              <div class="panel-hdr"><span class="panel-title">Distribuição de notas</span></div>
+              <div class="dist-row"><span class="dist-lbl">5</span><div class="dist-bg"><div class="dist-fill" style="width:62%;"></div></div><span class="dist-cnt">524</span></div>
+              <div class="dist-row"><span class="dist-lbl">4</span><div class="dist-bg"><div class="dist-fill" style="width:24%;"></div></div><span class="dist-cnt">203</span></div>
+              <div class="dist-row"><span class="dist-lbl">3</span><div class="dist-bg"><div class="dist-fill" style="width:8%;background:var(--amber);"></div></div><span class="dist-cnt">68</span></div>
+              <div class="dist-row"><span class="dist-lbl">2</span><div class="dist-bg"><div class="dist-fill" style="width:4%;background:var(--red);"></div></div><span class="dist-cnt">34</span></div>
+              <div class="dist-row"><span class="dist-lbl">1</span><div class="dist-bg"><div class="dist-fill" style="width:2%;background:var(--red);"></div></div><span class="dist-cnt">18</span></div>
+            </div>
+            <div class="panel">
+              <div class="panel-hdr"><span class="panel-title">Top pontos por avaliação</span></div>
+              <div class="top-item"><span class="top-rank">1</span><span class="top-name">Flui Shopping Mueller</span><div class="top-bar"><div class="top-fill" style="width:92%;"></div></div><span class="top-score">4.6</span></div>
+              <div class="top-item"><span class="top-rank">2</span><span class="top-name">Flui Água Verde</span><div class="top-bar"><div class="top-fill" style="width:88%;"></div></div><span class="top-score">4.4</span></div>
+              <div class="top-item"><span class="top-rank">3</span><span class="top-name">Flui Batel</span><div class="top-bar"><div class="top-fill" style="width:82%;"></div></div><span class="top-score">4.1</span></div>
+              <div class="top-item"><span class="top-rank">4</span><span class="top-name">Flui Capão Raso</span><div class="top-bar"><div class="top-fill" style="width:80%;"></div></div><span class="top-score">4.0</span></div>
+              <div class="top-item"><span class="top-rank">5</span><span class="top-name">Flui Centro</span><div class="top-bar"><div class="top-fill" style="width:62%;"></div></div><span class="top-score">3.8</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ VIEW: RELATÓRIOS ══════════ -->
+      <div class="view" id="view-relatorios">
+        <div class="metrics">
+          <div class="metric"><div class="ml">Recargas no mês</div><div class="mv g">3.241</div><div class="md up">↑ +18% vs abril</div></div>
+          <div class="metric"><div class="ml">kWh distribuídos</div><div class="mv">48.620</div><div class="md up">↑ +22%</div></div>
+          <div class="metric"><div class="ml">Tempo médio de recarga</div><div class="mv">27 min</div><div class="md nt">estável</div></div>
+          <div class="metric"><div class="ml">Horário de pico</div><div class="mv p">18h–19h</div><div class="md nt">diariamente</div></div>
+        </div>
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-hdr"><span class="panel-title">Recargas por semana — maio 2026</span></div>
+            <div class="barchart">
+              <div class="bcol"><div class="bval">712</div><div class="bbar" style="height:55%;background:rgba(124,63,204,.5);"></div><div class="blbl">S1</div></div>
+              <div class="bcol"><div class="bval">890</div><div class="bbar" style="height:70%;background:rgba(124,63,204,.5);"></div><div class="blbl">S2</div></div>
+              <div class="bcol"><div class="bval">1.080</div><div class="bbar" style="height:85%;background:rgba(124,63,204,.5);"></div><div class="blbl">S3</div></div>
+              <div class="bcol"><div class="bval">1.270</div><div class="bbar" style="height:100%;background:var(--green);"></div><div class="blbl">S4</div></div>
+              <div class="bcol"><div class="bval">289</div><div class="bbar" style="height:23%;background:rgba(124,63,204,.3);"></div><div class="blbl">S5*</div></div>
+            </div>
+            <div style="margin-top:14px;">
+              <div class="slabel" style="margin-bottom:8px;">Heatmap de horários — dias da semana</div>
+              <div class="heatmap">
+                <div class="hcell" style="background:var(--green);opacity:.14;"></div><div class="hcell" style="background:var(--green);opacity:.24;"></div><div class="hcell" style="background:var(--green);opacity:.38;"></div><div class="hcell" style="background:var(--green);opacity:.54;"></div><div class="hcell" style="background:var(--green);opacity:.88;"></div><div class="hcell" style="background:var(--green);opacity:.70;"></div><div class="hcell" style="background:var(--green);opacity:.30;"></div>
+                <div class="hcell" style="background:var(--purple);opacity:.18;"></div><div class="hcell" style="background:var(--purple);opacity:.32;"></div><div class="hcell" style="background:var(--purple);opacity:.48;"></div><div class="hcell" style="background:var(--purple);opacity:.66;"></div><div class="hcell" style="background:var(--purple);opacity:1;"></div><div class="hcell" style="background:var(--purple);opacity:.82;"></div><div class="hcell" style="background:var(--purple);opacity:.40;"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:4px;">
+                <span style="font-size:9px;color:var(--t5);">seg</span><span style="font-size:9px;color:var(--t5);">ter</span><span style="font-size:9px;color:var(--t5);">qua</span><span style="font-size:9px;color:var(--t5);">qui</span><span style="font-size:9px;color:var(--green);">sex ↑</span><span style="font-size:9px;color:var(--t5);">sáb</span><span style="font-size:9px;color:var(--t5);">dom</span>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-hdr"><span class="panel-title">Distribuição por conector</span></div>
+            <div class="donut-wrap" style="margin-bottom:16px;">
+              <div style="width:90px;height:90px;border-radius:50%;flex-shrink:0;background:conic-gradient(var(--green) 0% 58%,var(--purple) 58% 80%,var(--amber) 80% 93%,#444 93% 100%);display:flex;align-items:center;justify-content:center;padding:8px;">
+                <div style="width:74px;height:74px;border-radius:50%;background:var(--surf);display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                  <div style="font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:var(--t1);">3.241</div>
+                  <div style="font-size:9px;color:var(--t5);">recargas</div>
+                </div>
+              </div>
+              <div class="donut-leg">
+                <div class="dleg"><div class="dleg-dot" style="background:var(--green);"></div>CCS2<span class="dleg-val" style="color:var(--green);">58%</span></div>
+                <div class="dleg"><div class="dleg-dot" style="background:var(--purple);"></div>CHAdeMO<span class="dleg-val" style="color:var(--pl);">22%</span></div>
+                <div class="dleg"><div class="dleg-dot" style="background:var(--amber);"></div>Type 2<span class="dleg-val" style="color:var(--amber);">13%</span></div>
+                <div class="dleg"><div class="dleg-dot" style="background:#444;"></div>Outros<span class="dleg-val" style="color:var(--t5);">7%</span></div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="slabel">Top 3 por volume</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:var(--t5);width:14px;">1</span><span style="font-size:11px;color:var(--t2);flex:1;">Flui Shopping Mueller</span><div style="width:60px;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;"><div style="height:100%;width:100%;background:var(--green);border-radius:2px;"></div></div><span style="font-size:11px;font-weight:600;color:var(--green);">612</span></div>
+              <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:var(--t5);width:14px;">2</span><span style="font-size:11px;color:var(--t2);flex:1;">Flui Batel</span><div style="width:60px;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;"><div style="height:100%;width:82%;background:var(--purple);border-radius:2px;"></div></div><span style="font-size:11px;font-weight:600;color:var(--pl);">502</span></div>
+              <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:var(--t5);width:14px;">3</span><span style="font-size:11px;color:var(--t2);flex:1;">Flui Água Verde</span><div style="width:60px;height:4px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden;"><div style="height:100%;width:68%;background:var(--purple);border-radius:2px;"></div></div><span style="font-size:11px;font-weight:600;color:var(--pl);">416</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ VIEW: CADASTRO ══════════ -->
+      <div class="view" id="view-cadastro">
+        <div class="form-grid">
+          <div class="form-group wide">
+            <div class="slabel">Informações básicas</div>
+          </div>
+          <div class="form-group">
+            <label class="flabel">Nome do ponto</label>
+            <input class="finput active" value="Flui Novo Ponto" readonly>
+          </div>
+          <div class="form-group">
+            <label class="flabel">Nº de carregadores</label>
+            <input class="finput active" value="4" readonly>
+          </div>
+          <div class="form-group wide">
+            <label class="flabel">Endereço completo</label>
+            <input class="finput" style="border-color:rgba(170,255,62,.35);" value="R. Marechal Deodoro, 630 · Curitiba, PR" readonly>
+          </div>
+          <div class="form-group">
+            <label class="flabel">Horário de funcionamento</label>
+            <input class="finput active" value="24 horas" readonly>
+          </div>
+          <div class="form-group">
+            <label class="flabel">Potência máxima (kW)</label>
+            <input class="finput active" style="color:var(--green);font-weight:600;" value="150 kW" readonly>
+          </div>
+          <div class="form-group wide">
+            <label class="flabel">Tipos de conector</label>
+            <div class="fchips" id="fchips">
+              <div class="fchip on" onclick="toggleChip(this)">CCS2</div>
+              <div class="fchip on" onclick="toggleChip(this)">CHAdeMO</div>
+              <div class="fchip off" onclick="toggleChip(this)">Type 2</div>
+              <div class="fchip off" onclick="toggleChip(this)">AC</div>
+              <div class="fchip off" onclick="toggleChip(this)">GB/T</div>
+            </div>
+          </div>
+          <div class="form-group wide">
+            <label class="flabel">Comodidades próximas</label>
+            <div class="fchips" id="fchips2">
+              <div class="fchip on" onclick="toggleChip(this)">Café</div>
+              <div class="fchip on" onclick="toggleChip(this)">Wi-Fi</div>
+              <div class="fchip off" onclick="toggleChip(this)">Shopping</div>
+              <div class="fchip off" onclick="toggleChip(this)">Estacionamento</div>
+              <div class="fchip off" onclick="toggleChip(this)">Acessível</div>
+              <div class="fchip off" onclick="toggleChip(this)">Banheiro</div>
+            </div>
+          </div>
+          <div class="form-group wide">
+            <label class="flabel">Localização no mapa</label>
+            <div class="fmap">
+              <div class="mr" style="top:55px;left:0;right:0;height:18px;background:#242836;"></div>
+              <div class="mr" style="top:105px;left:0;right:0;height:14px;background:#1e2230;"></div>
+              <div class="mr" style="top:0;bottom:0;left:60px;width:18px;background:#242836;"></div>
+              <div class="mr" style="top:0;bottom:0;left:160px;width:14px;background:#1e2230;"></div>
+              <div class="mr" style="top:0;bottom:0;left:260px;width:18px;background:#242836;"></div>
+              <div class="mbl" style="top:8px;left:8px;width:46px;height:40px;"></div>
+              <div class="mbl" style="top:8px;left:84px;width:70px;height:40px;"></div>
+              <div class="mbl" style="top:8px;left:180px;width:74px;height:40px;"></div>
+              <div class="mbl" style="top:8px;left:284px;width:80px;height:40px;"></div>
+              <div class="mbl" style="top:79px;left:8px;width:46px;height:20px;"></div>
+              <div class="mbl" style="top:79px;left:84px;width:70px;height:20px;"></div>
+              <div class="mbl" style="top:79px;left:180px;width:74px;height:20px;"></div>
+              <div class="mbl" style="top:125px;left:8px;width:46px;height:68px;"></div>
+              <div class="mbl" style="top:125px;left:84px;width:70px;height:68px;"></div>
+              <div class="mbl" style="top:125px;left:180px;width:74px;height:68px;"></div>
+              <div class="mbl" style="top:125px;left:284px;width:80px;height:68px;"></div>
+              <div class="fmap-pin">
+                <div class="fmap-pulse"><div class="fmap-dot"></div></div>
+              </div>
+              <div class="fmap-hint">Clique para ajustar pin</div>
+            </div>
+            <div style="background:var(--surf);border:.5px solid var(--b1);border-radius:8px;padding:10px 12px;margin-top:6px;display:flex;align-items:center;justify-content:space-between;">
+              <div><div style="font-size:10px;color:var(--t5);margin-bottom:2px;">Coordenadas detectadas</div><div style="font-size:12px;color:var(--t2);font-weight:500;">-25.4284° S, -49.2733° W</div></div>
+              <span style="font-size:11px;color:var(--pl);cursor:pointer;">Ajustar →</span>
+            </div>
+          </div>
+          <div class="form-group wide" style="flex-direction:row;gap:10px;margin-top:4px;">
+            <button class="btn-p" style="flex:1;"><span class="ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span> Salvar ponto</button>
+            <button class="btn-g" style="flex:1;" onclick="goView('pontos',null)">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const TOPBAR={
+  dashboard:{title:'Dashboard',sub:'Visão geral da rede · atualizado agora',showNew:true},
+  pontos:{title:'Pontos de recarga',sub:'48 eletropostos cadastrados',showNew:true},
+  avaliacoes:{title:'Avaliações',sub:'847 avaliações na rede · média geral 4.2',showNew:false},
+  relatorios:{title:'Relatórios e métricas',sub:'Dados simulados · maio 2026',showNew:false},
+  cadastro:{title:'Cadastrar novo ponto',sub:'Preencha os dados do eletroposto',showNew:false},
+};
+
+let cur='dashboard';
+
+function goView(name,navEl){
+  if(name===cur&&navEl)return;
+  document.querySelector('.view.active').classList.remove('active');
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const target=navEl||document.querySelector(`[data-view="${name}"]`);
+  if(target)target.classList.add('active');
+  const tb=TOPBAR[name];
+  document.getElementById('tb-title').textContent=tb.title;
+  document.getElementById('tb-sub').textContent=tb.sub;
+  const acts=document.getElementById('tb-actions');
+  if(name==='cadastro'){
+    acts.innerHTML=`<button class="btn-g" onclick="goView('pontos',null)">Cancelar</button><button class="btn-p"><span class="ico"><svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></span> Salvar ponto</button>`;
+  } else if(name==='relatorios'){
+    acts.innerHTML=`<button class="btn-g"><span class="ico" style="font-size:14px;"><svg viewBox="0 0 24 24" style="width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span> Maio 2026</button><button class="btn-g"><span class="ico" style="font-size:14px;"><svg viewBox="0 0 24 24" style="width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg></span> Exportar PDF</button>`;
+  } else {
+    acts.innerHTML=`<button class="btn-g"><span class="ico" style="font-size:14px;"><svg viewBox="0 0 24 24" style="width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg></span> Exportar</button><button class="btn-p" onclick="goView('cadastro',null)"><span class="ico" style="font-size:14px;"><svg viewBox="0 0 24 24" style="width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><path d="M12 5v14M5 12h14"/></svg></span> Novo ponto</button>`;
+  }
+  document.querySelector('.content').scrollTop=0;
+  cur=name;
+}
+
+function toggleChip(el){
+  el.classList.toggle('on');
+  el.classList.toggle('off');
+}
+</script>
+</body>
+</html>

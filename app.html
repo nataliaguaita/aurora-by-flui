@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurora by Flui — Protótipo App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --base:#0A0A0F; --surface:#13131A; --card:#1C1C28;
+  --b1:rgba(255,255,255,0.07); --b2:rgba(255,255,255,0.13);
+  --green:#AAFF3E; --gd:rgba(170,255,62,0.12); --gb:rgba(170,255,62,0.28);
+  --purple:#7C3FCC; --pl:#B87DFF; --pd:rgba(124,63,204,0.16);
+  --amber:#FFB23E; --red:#FF5F5F; --blue:#5B9FFF;
+  --t1:#fff; --t2:#ccc; --t3:#999; --t4:#666; --t5:#333;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:#060609;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:'DM Sans',sans-serif;padding:24px 16px;}
+.ico{display:inline-flex;align-items:center;justify-content:center;line-height:1;}
+.ico svg{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ── DEVICE ── */
+.device{width:375px;height:812px;background:var(--base);border-radius:50px;border:1.5px solid #252530;overflow:hidden;position:relative;box-shadow:0 40px 100px rgba(0,0,0,.85);}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:30px;background:var(--base);border-radius:0 0 20px 20px;z-index:100;}
+
+/* ── SCREENS ── */
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transform:translateX(100%);transition:opacity .3s ease,transform .32s cubic-bezier(.4,0,.2,1);}
+.screen.active{opacity:1;pointer-events:all;transform:translateX(0);}
+.screen.exit-left{opacity:0;transform:translateX(-55px);pointer-events:none;}
+
+/* ── STATUS BAR ── */
+.status-bar{height:44px;padding:14px 22px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;position:relative;z-index:10;}
+.status-time{font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--t1);}
+.status-icons{display:flex;gap:6px;align-items:center;color:var(--t1);font-size:14px;}
+
+/* ── TOP BAR ── */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 10px;flex-shrink:0;}
+.top-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:var(--t1);}
+.icon-btn{width:36px;height:36px;background:rgba(255,255,255,.06);border:.5px solid var(--b2);border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:17px;transition:background .15s;}
+.icon-btn:active{background:rgba(255,255,255,.12);}
+
+/* ── NAV BAR ── */
+.nav-bar{height:82px;background:rgba(10,10,18,.98);border-top:.5px solid var(--b1);display:flex;justify-content:space-around;align-items:flex-start;padding-top:12px;flex-shrink:0;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:0 14px;}
+.nav-item .ico{font-size:22px;color:var(--t5);transition:color .2s;}
+.nav-item.active .ico{color:var(--green);}
+.nav-dot{width:5px;height:5px;border-radius:50%;background:var(--green);opacity:0;transition:opacity .2s;}
+.nav-item.active .nav-dot{opacity:1;}
+
+/* ── SCROLL ── */
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;}
+.scroll::-webkit-scrollbar{display:none;}
+.pad{padding:0 14px;}
+
+/* ── ATOMS ── */
+.badge{display:inline-flex;align-items:center;border-radius:100px;padding:3px 11px;font-size:11px;font-weight:600;}
+.bg{background:var(--gd);color:var(--green);border:.5px solid var(--gb);}
+.ba{background:rgba(255,178,62,.12);color:var(--amber);border:.5px solid rgba(255,178,62,.28);}
+.br{background:rgba(255,95,95,.1);color:var(--red);border:.5px solid rgba(255,95,95,.2);}
+.bp{background:var(--pd);color:var(--pl);border:.5px solid rgba(124,63,204,.3);}
+.tag{background:rgba(255,255,255,.05);border:.5px solid var(--b1);border-radius:7px;padding:3px 9px;font-size:10px;color:var(--t3);}
+.slabel{font-size:10px;color:var(--t4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;font-weight:500;}
+.divider{height:.5px;background:rgba(255,255,255,.05);margin:14px 0;}
+.btn-p{background:var(--green);color:#0a1400;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:700;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;width:100%;transition:opacity .15s,transform .1s;}
+.btn-p:active{opacity:.85;transform:scale(.98);}
+.btn-s{background:rgba(255,255,255,.05);border:.5px solid var(--b2);color:var(--pl);border-radius:14px;padding:12px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;width:100%;}
+
+/* ═══════════════════════════════════════
+   T1 SPLASH — AURORA BOREAL ANIMADA
+═══════════════════════════════════════ */
+#s-splash{background:#060414;overflow:hidden;}
+
+/* camadas da aurora */
+@keyframes aurora1{
+  0%{transform:translateX(-10%) rotate(-8deg) scaleY(1);}
+  50%{transform:translateX(10%) rotate(4deg) scaleY(1.3);}
+  100%{transform:translateX(-10%) rotate(-8deg) scaleY(1);}
+}
+@keyframes aurora2{
+  0%{transform:translateX(8%) rotate(6deg) scaleY(1);}
+  50%{transform:translateX(-12%) rotate(-5deg) scaleY(0.8);}
+  100%{transform:translateX(8%) rotate(6deg) scaleY(1);}
+}
+@keyframes aurora3{
+  0%{transform:translateX(0%) rotate(0deg) scaleY(1);}
+  33%{transform:translateX(-8%) rotate(-3deg) scaleY(1.2);}
+  66%{transform:translateX(6%) rotate(5deg) scaleY(0.9);}
+  100%{transform:translateX(0%) rotate(0deg) scaleY(1);}
+}
+@keyframes electronFloat{
+  0%,100%{transform:translate(0,0) scale(1);opacity:.6;}
+  25%{transform:translate(8px,-12px) scale(1.1);opacity:.9;}
+  50%{transform:translate(-6px,-20px) scale(.9);opacity:.7;}
+  75%{transform:translate(10px,-8px) scale(1.05);opacity:.85;}
+}
+@keyframes electronTrail{
+  0%{stroke-dashoffset:100;opacity:0;}
+  30%{opacity:.6;}
+  100%{stroke-dashoffset:0;opacity:0;}
+}
+@keyframes glowPulse{
+  0%,100%{opacity:.4;transform:scale(1);}
+  50%{opacity:.8;transform:scale(1.15);}
+}
+
+.aurora-bg{position:absolute;inset:0;overflow:hidden;}
+.aurora-layer{position:absolute;left:-30%;right:-30%;height:260px;border-radius:50%;filter:blur(40px);transform-origin:center center;}
+.al1{top:-40px;background:linear-gradient(180deg,rgba(124,63,204,.0) 0%,rgba(124,63,204,.55) 40%,rgba(170,255,62,.3) 70%,rgba(170,255,62,.0) 100%);animation:aurora1 8s ease-in-out infinite;}
+.al2{top:20px;background:linear-gradient(180deg,rgba(170,255,62,.0) 0%,rgba(91,159,255,.4) 35%,rgba(124,63,204,.45) 65%,rgba(170,255,62,.0) 100%);animation:aurora2 11s ease-in-out infinite;}
+.al3{top:-20px;background:linear-gradient(180deg,rgba(170,255,62,.0) 0%,rgba(170,255,62,.25) 45%,rgba(91,159,255,.35) 70%,rgba(124,63,204,.0) 100%);animation:aurora3 14s ease-in-out infinite;}
+
+/* elétrons flutuantes */
+.electrons{position:absolute;inset:0;}
+.electron{position:absolute;animation:electronFloat 4s ease-in-out infinite;}
+.e1{left:12%;top:38%;animation-delay:0s;}
+.e2{left:72%;top:22%;animation-delay:1.2s;}
+.e3{left:48%;top:52%;animation-delay:2.1s;}
+.e4{left:88%;top:44%;animation-delay:.7s;}
+.e5{left:28%;top:18%;animation-delay:1.8s;}
+.edot{width:6px;height:6px;border-radius:50%;}
+.edot-g{background:var(--green);box-shadow:0 0 8px var(--green),0 0 16px rgba(170,255,62,.4);}
+.edot-p{background:var(--pl);box-shadow:0 0 8px var(--pl),0 0 16px rgba(184,125,255,.4);}
+.edot-b{background:var(--blue);box-shadow:0 0 8px var(--blue),0 0 16px rgba(91,159,255,.4);}
+
+/* linhas de conexão animadas */
+.elines{position:absolute;inset:0;pointer-events:none;}
+@keyframes lineFlow{
+  0%{stroke-dashoffset:200;opacity:0;}
+  20%{opacity:.4;}
+  80%{opacity:.3;}
+  100%{stroke-dashoffset:0;opacity:0;}
+}
+.eline{stroke-dasharray:30 170;animation:lineFlow 3s linear infinite;}
+
+.sp-stars{position:absolute;inset:0;}
+.sp-star{position:absolute;border-radius:50%;background:#fff;}
+@keyframes twinkle{0%,100%{opacity:.1;}50%{opacity:.5;}}
+
+.sp-content{position:relative;z-index:10;display:flex;flex-direction:column;flex:1;}
+.sp-logo-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.sp-mark{width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,var(--purple) 0%,var(--green) 100%);display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:36px;color:#fff;position:relative;}
+.sp-mark-glow{position:absolute;inset:-8px;border-radius:32px;background:linear-gradient(135deg,rgba(124,63,204,.3),rgba(170,255,62,.3));filter:blur(12px);animation:glowPulse 3s ease-in-out infinite;z-index:-1;}
+.sp-brand{font-family:'Sora',sans-serif;font-size:40px;font-weight:800;color:var(--t1);letter-spacing:-1px;line-height:1;}
+.sp-by{font-size:13px;color:var(--pl);margin-top:5px;letter-spacing:.05em;}
+.sp-tag{font-size:14px;color:rgba(255,255,255,.5);margin-top:14px;text-align:center;line-height:1.5;max-width:230px;}
+
+.sp-bottom{padding:0 20px 36px;position:relative;z-index:10;}
+.sp-props{display:flex;flex-direction:column;gap:12px;margin-bottom:24px;}
+.sp-prop{display:flex;align-items:center;gap:12px;}
+.sp-icon{width:36px;height:36px;border-radius:10px;background:var(--gd);border:.5px solid var(--gb);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:17px;color:var(--green);}
+.sp-txt{font-size:13px;color:var(--t2);font-weight:500;}
+.sp-skip{text-align:center;margin-top:14px;font-size:13px;color:var(--t4);cursor:pointer;}
+.pdots{display:flex;justify-content:center;gap:6px;margin-top:14px;}
+.pdot{height:6px;border-radius:3px;background:var(--t5);transition:all .3s;}
+.pdot.on{width:20px;background:var(--green);}
+.pdot:not(.on){width:6px;}
+
+/* ═══════════════════════════════════════
+   T2 MAPA
+═══════════════════════════════════════ */
+#s-map{background:var(--base);}
+.map-area{flex:1;position:relative;overflow:hidden;background:#1a1f2e;}
+.rh{position:absolute;left:0;right:0;background:#242836;}
+.rv{position:absolute;top:0;bottom:0;background:#242836;}
+.rsh{position:absolute;left:0;right:0;background:#1e2230;}
+.rsv{position:absolute;top:0;bottom:0;background:#1e2230;}
+.mb{position:absolute;background:#161b28;border-radius:4px;}
+.myloc{position:absolute;transform:translate(-50%,-50%);}
+.loc-out{width:22px;height:22px;border-radius:50%;background:rgba(91,159,255,.2);display:flex;align-items:center;justify-content:center;}
+.loc-in{width:11px;height:11px;border-radius:50%;background:var(--blue);border:2px solid #fff;}
+.pin{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;cursor:pointer;z-index:5;transition:transform .2s;}
+.pin:active{transform:translate(-50%,-100%) scale(.9);}
+.pbubble{border-radius:10px;padding:5px 11px;display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;font-family:'Sora',sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.4);}
+.ptail{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;}
+.pg .pbubble{background:var(--green);color:#0a1400;}
+.pg .ptail{border-top:7px solid var(--green);}
+.pa .pbubble{background:var(--amber);color:#2a1800;}
+.pa .ptail{border-top:7px solid var(--amber);}
+.pr .pbubble{background:var(--red);color:#2a0000;}
+.pr .ptail{border-top:7px solid var(--red);}
+.pin.sel .pbubble{box-shadow:0 0 0 3px rgba(170,255,62,.35),0 4px 16px rgba(0,0,0,.5);transform:scale(1.08);}
+
+/* search flutuante — posicionado ABAIXO da status bar (44px) */
+.msearch{position:absolute;top:56px;left:14px;right:14px;z-index:20;}
+.si{background:rgba(14,14,24,.95);border:.5px solid var(--b2);border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:10px;}
+.si-ph{font-size:13px;color:var(--t4);flex:1;}
+.fchip-map{background:var(--gd);border:.5px solid var(--gb);border-radius:8px;padding:4px 10px;display:flex;align-items:center;gap:5px;cursor:pointer;}
+.fchip-map span{font-size:11px;color:var(--green);font-weight:600;}
+
+.fps{position:absolute;top:112px;left:14px;right:14px;z-index:20;display:flex;gap:6px;}
+.fp{background:rgba(14,14,24,.9);border:.5px solid var(--b1);border-radius:100px;padding:5px 12px;font-size:11px;color:var(--t3);cursor:pointer;white-space:nowrap;}
+.fp.on{background:var(--gd);border-color:var(--gb);color:var(--green);font-weight:600;}
+
+.mctrl{position:absolute;right:14px;top:50%;transform:translateY(-50%);z-index:20;display:flex;flex-direction:column;gap:8px;}
+.mcb{width:38px;height:38px;background:rgba(14,14,24,.95);border:.5px solid var(--b1);border-radius:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;}
+
+.gc{position:absolute;bottom:0;left:0;right:0;z-index:30;background:rgba(10,10,18,.96);border-top:.5px solid var(--b2);border-radius:24px 24px 0 0;padding:8px 18px 20px;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);}
+.gc.vis{transform:translateY(0);}
+.dh{width:38px;height:4px;border-radius:2px;background:rgba(255,255,255,.15);margin:0 auto 14px;}
+.gc-name{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--t1);}
+.gc-addr{font-size:11px;color:var(--t4);margin:4px 0 12px;}
+.gc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
+.gc-stat{background:rgba(255,255,255,.04);border:.5px solid var(--b1);border-radius:10px;padding:8px 10px;}
+.gc-sl{font-size:10px;color:var(--t4);margin-bottom:3px;}
+.gc-sv{font-size:14px;font-weight:700;font-family:'Sora',sans-serif;color:var(--t1);}
+.gc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px;}
+.gc-acts{display:flex;gap:8px;}
+.gc-nb{flex:1;background:var(--green);color:#0a1400;border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:700;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;}
+.gc-ib{width:46px;height:46px;background:rgba(255,255,255,.05);border:.5px solid var(--b1);border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;color:var(--t3);}
+/* botão viagem — roxo */
+.gc-trip{background:var(--pd);border:.5px solid rgba(124,63,204,.35);color:var(--pl);}
+
+/* ═══════════════════════════════════════
+   T3 FICHA
+═══════════════════════════════════════ */
+#s-detail{background:var(--base);}
+.hero-map{border-radius:18px;height:130px;background:#1a1f2e;position:relative;overflow:hidden;margin-bottom:16px;}
+.hero-ov{position:absolute;bottom:0;left:0;right:0;background:rgba(10,10,15,.75);padding:7px 12px;display:flex;justify-content:space-between;align-items:center;}
+.pt-name{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--t1);}
+.pt-addr{font-size:12px;color:var(--t4);margin:4px 0 10px;}
+.rrow{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.stars{color:var(--pl);font-size:13px;letter-spacing:1px;}
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.bw{grid-column:span 2;}
+.bc{background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px;}
+.bcl{font-size:10px;color:var(--t4);margin-bottom:5px;}
+.bcv{font-size:22px;font-weight:800;font-family:'Sora',sans-serif;color:var(--t1);line-height:1;}
+.bcv.g{color:var(--green);}
+.bcs{font-size:10px;color:var(--t4);margin-top:3px;}
+.crow{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid rgba(255,255,255,.05);}
+.crow:last-child{border-bottom:none;}
+.cdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ci{flex:1;}
+.cn{font-size:12px;color:var(--t2);font-weight:500;}
+.cs{font-size:10px;color:var(--t4);}
+.cst{font-size:11px;font-weight:600;}
+.pbars{display:flex;gap:3px;align-items:flex-end;height:40px;}
+.pbar{flex:1;border-radius:3px 3px 0 0;}
+.plbls{display:flex;gap:3px;margin-top:4px;}
+.plbl{flex:1;font-size:9px;color:var(--t5);text-align:center;}
+.plbl.now{color:var(--green);}
+.ams{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.am{background:rgba(255,255,255,.04);border:.5px solid var(--b1);border-radius:8px;padding:5px 10px;display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t3);}
+.am .ico{font-size:13px;}
+.revc{background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px;margin-bottom:8px;}
+.rh2{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.ru{display:flex;align-items:center;gap:8px;}
+.rav{width:28px;height:28px;border-radius:50%;background:var(--pd);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--pl);}
+.rn{font-size:12px;font-weight:600;color:var(--t2);}
+.rd{font-size:10px;color:var(--t5);}
+.rt{font-size:11px;color:var(--t3);line-height:1.5;}
+.rall{text-align:center;font-size:12px;color:var(--pl);cursor:pointer;margin-bottom:14px;font-weight:500;}
+
+/* ═══════════════════════════════════════
+   T4 BUSCA
+═══════════════════════════════════════ */
+#s-search{background:var(--base);}
+.sba{background:var(--surface);border:1px solid rgba(170,255,62,.35);border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:10px;margin:8px 14px 14px;}
+.sv{font-size:14px;color:var(--t1);flex:1;font-weight:500;}
+.cbtn{width:28px;height:28px;background:rgba(255,255,255,.06);border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:var(--t3);}
+.fsec{padding:0 14px 14px;}
+.ftitle{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:10px;}
+.fchips{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;}
+.fc{border-radius:100px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;border:.5px solid;transition:all .15s;}
+.fc.on{background:var(--green);color:#0a1400;border-color:var(--green);}
+.fc.off{background:var(--surface);color:var(--t3);border-color:var(--b1);}
+.fdiv{height:.5px;background:rgba(255,255,255,.06);margin:0 0 14px;}
+.ckrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid rgba(255,255,255,.04);cursor:pointer;}
+.ckrow:last-child{border-bottom:none;}
+.ckbox{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.ckbox.chk{background:var(--green);color:#0a1400;font-weight:700;}
+.ckbox.unc{background:rgba(255,255,255,.05);border:.5px solid var(--b2);}
+.cklbl{font-size:13px;color:var(--t2);}
+.rhead{padding:0 14px 10px;display:flex;justify-content:space-between;align-items:center;}
+.rc{font-size:11px;color:var(--t4);font-weight:500;letter-spacing:.05em;}
+.rs{font-size:11px;color:var(--pl);cursor:pointer;font-weight:500;}
+.rcard{background:var(--surface);border:.5px solid var(--b1);border-radius:16px;padding:14px;margin:0 14px 10px;cursor:pointer;transition:border-color .15s;}
+.rcard:active{border-color:var(--gb);}
+.rct{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+.rcname{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--t1);}
+.rcaddr{font-size:11px;color:var(--t4);margin-top:2px;}
+.rcb{display:flex;gap:14px;align-items:center;border-top:.5px solid rgba(255,255,255,.05);padding-top:8px;margin-top:4px;}
+
+/* ═══════════════════════════════════════
+   T5 AVALIAÇÃO — 3 ETAPAS
+═══════════════════════════════════════ */
+#s-review{background:var(--base);}
+.review-steps{display:flex;align-items:center;justify-content:center;gap:0;padding:8px 18px 16px;}
+.rstep{display:flex;align-items:center;gap:0;}
+.rstep-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;flex-shrink:0;}
+.rstep-dot.done{background:var(--green);color:#0a1400;}
+.rstep-dot.active{background:var(--green);color:#0a1400;box-shadow:0 0 0 3px rgba(170,255,62,.3);}
+.rstep-dot.idle{background:rgba(255,255,255,.08);color:var(--t4);border:.5px solid var(--b1);}
+.rstep-line{width:36px;height:2px;background:rgba(255,255,255,.08);}
+.rstep-line.done{background:var(--green);}
+.rstep-label{font-size:9px;color:var(--t4);text-align:center;margin-top:4px;position:absolute;}
+
+/* etapa container */
+.step-panel{display:none;flex-direction:column;gap:0;}
+.step-panel.active{display:flex;}
+
+/* etapa 1: emoji rápido */
+.emoji-row{display:flex;gap:10px;padding:0 14px 16px;}
+.emoji-btn{flex:1;background:var(--surface);border:.5px solid var(--b1);border-radius:16px;padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .2s;}
+.emoji-btn.selected{border-color:var(--gb);background:var(--gd);}
+.emoji-btn.selected.bad{border-color:rgba(255,95,95,.35);background:rgba(255,95,95,.1);}
+.emoji-btn.selected.ok{border-color:rgba(255,178,62,.35);background:rgba(255,178,62,.1);}
+.emoji-face{font-size:32px;line-height:1;}
+.emoji-label{font-size:11px;color:var(--t3);font-weight:500;}
+.emoji-btn.selected .emoji-label{color:var(--t1);}
+
+/* etapa 2: critérios estrelas */
+.ccard{background:var(--surface);border:.5px solid var(--b1);border-radius:16px;padding:14px;margin:0 14px 10px;}
+.cname{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--t1);}
+.cdesc{font-size:11px;color:var(--t4);margin-top:2px;margin-bottom:10px;}
+.srow{display:flex;gap:6px;}
+.sbtn{flex:1;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;border:.5px solid;transition:all .15s;}
+.sbtn.fil{background:var(--green);border-color:var(--green);color:#0a1400;}
+.sbtn.emp{background:rgba(255,255,255,.04);border-color:var(--b1);color:var(--t5);}
+.sbtn:active{transform:scale(.93);}
+.ocard{background:rgba(255,255,255,.03);border:.5px solid var(--b1);border-radius:14px;padding:12px 16px;margin:0 14px 14px;display:flex;align-items:center;justify-content:space-between;}
+.olbl{font-size:12px;color:var(--t3);}
+.oval{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--green);}
+
+/* etapa 3: comentário */
+.cmtarea{margin:0 14px 14px;background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px 14px;}
+.cmtlbl{font-size:11px;color:var(--t3);font-weight:500;margin-bottom:8px;}
+.cmtph{font-size:12px;color:var(--t5);}
+.credit-card{background:linear-gradient(135deg,rgba(124,63,204,.25),rgba(170,255,62,.1));border:.5px solid rgba(170,255,62,.2);border-radius:14px;padding:14px;margin:0 14px 14px;}
+.credit-label{font-size:10px;color:var(--pl);margin-bottom:6px;}
+.credit-val{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--green);}
+.credit-sub{font-size:11px;color:var(--t3);margin-top:3px;}
+
+/* nav etapas */
+.step-nav{display:flex;gap:8px;padding:0 14px 24px;}
+.step-back{flex:.5;background:rgba(255,255,255,.05);border:.5px solid var(--b2);color:var(--t2);border-radius:14px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;}
+.step-next{flex:1;background:var(--green);color:#0a1400;border:none;border-radius:14px;padding:12px;font-size:14px;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;}
+
+/* ═══════════════════════════════════════
+   T6 VIAGEM
+═══════════════════════════════════════ */
+#s-trip{background:var(--base);}
+.trip-hero{background:linear-gradient(135deg,#0d0720,#1a1035);padding:20px 18px 24px;position:relative;overflow:hidden;}
+.trip-hero-glow{position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(124,63,204,.3) 0%,transparent 70%);top:-40px;right:-30px;pointer-events:none;}
+.trip-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--t1);margin-bottom:4px;}
+.trip-sub{font-size:13px;color:var(--t3);}
+.route-card{background:var(--surface);border:.5px solid var(--b1);border-radius:16px;padding:14px;margin:0 14px 12px;}
+.route-input{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid rgba(255,255,255,.05);}
+.route-input:last-child{border-bottom:none;padding-bottom:0;}
+.route-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.route-label{font-size:12px;color:var(--t4);width:60px;flex-shrink:0;}
+.route-val{font-size:13px;color:var(--t1);font-weight:500;flex:1;}
+.route-connector{width:1px;height:14px;background:rgba(255,255,255,.1);margin-left:4px;}
+.stop-card{background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px 14px;margin:0 14px 10px;display:flex;align-items:center;gap:10px;}
+.stop-num{width:26px;height:26px;border-radius:50%;background:var(--gd);border:.5px solid var(--gb);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--green);flex-shrink:0;}
+.stop-info{flex:1;}
+.stop-name{font-size:13px;font-weight:600;color:var(--t1);}
+.stop-detail{font-size:10px;color:var(--t4);margin-top:2px;}
+.stop-time{font-size:12px;font-weight:600;color:var(--green);}
+.offline-banner{background:rgba(170,255,62,.08);border:.5px solid rgba(170,255,62,.2);border-radius:10px;padding:10px 14px;margin:0 14px 12px;display:flex;align-items:center;gap:8px;}
+.offline-banner .ico{font-size:16px;color:var(--green);}
+.offline-txt{font-size:11px;color:var(--green);}
+
+/* ═══════════════════════════════════════
+   T7 PERFIL
+═══════════════════════════════════════ */
+#s-profile{background:var(--base);}
+.phero{background:#12081E;position:relative;overflow:hidden;}
+.pg1{position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(124,63,204,.2) 0%,transparent 70%);top:-30px;left:-50px;pointer-events:none;}
+.pg2{position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(170,255,62,.08) 0%,transparent 70%);top:40px;right:-20px;pointer-events:none;}
+.pavwrap{display:flex;flex-direction:column;align-items:center;padding:52px 0 20px;position:relative;z-index:1;}
+.pav{width:80px;height:80px;border-radius:50%;background:rgba(124,63,204,.35);border:2.5px solid rgba(170,255,62,.5);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--pl);margin-bottom:12px;}
+.pname{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:var(--t1);}
+.psub{font-size:12px;color:var(--t4);margin-top:4px;}
+.pstats{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--surface);border:.5px solid var(--b1);border-radius:16px;margin:0 14px 14px;overflow:hidden;}
+.pst{padding:14px 10px;text-align:center;border-right:.5px solid var(--b1);}
+.pst:last-child{border-right:none;}
+.pstv{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--t1);}
+.pstv.g{color:var(--green);}
+.pstv.p{color:var(--pl);}
+.pstl{font-size:10px;color:var(--t4);margin-top:3px;}
+.fcard{background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;}
+.fcard:active{border-color:var(--gb);}
+.fdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.fi{flex:1;}
+.fn{font-size:13px;font-weight:600;color:var(--t1);}
+.fa{font-size:10px;color:var(--t4);margin-top:2px;}
+.hcard{background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.hico{width:36px;height:36px;border-radius:10px;background:rgba(170,255,62,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;color:var(--green);}
+.hi{flex:1;}
+.hn{font-size:12px;font-weight:600;color:var(--t1);}
+.hd{font-size:10px;color:var(--t4);margin-top:2px;}
+.hkw{font-size:11px;color:var(--t3);font-weight:500;}
+
+/* ── FOOTER ── */
+.dlabel{text-align:center;margin-top:18px;font-family:'Sora',sans-serif;font-size:12px;color:rgba(255,255,255,.2);letter-spacing:.05em;}
+.sinds{display:flex;justify-content:center;gap:6px;margin-top:10px;}
+.sind{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.14);cursor:pointer;transition:all .2s;}
+.sind.on{background:var(--green);width:20px;border-radius:3px;}
+</style>
+</head>
+<body>
+<div style="display:flex;flex-direction:column;align-items:center;">
+<div class="device" id="dev">
+  <div class="notch"></div>
+
+  <!-- ══ T1 SPLASH ══ -->
+  <div class="screen active" id="s-splash">
+    <div class="aurora-bg">
+      <div class="aurora-layer al1"></div>
+      <div class="aurora-layer al2"></div>
+      <div class="aurora-layer al3"></div>
+    </div>
+    <div class="sp-stars" id="spStars"></div>
+    <div class="electrons">
+      <div class="electron e1"><div class="edot edot-g"></div></div>
+      <div class="electron e2"><div class="edot edot-p"></div></div>
+      <div class="electron e3"><div class="edot edot-b"></div></div>
+      <div class="electron e4"><div class="edot edot-g"></div></div>
+      <div class="electron e5"><div class="edot edot-p"></div></div>
+    </div>
+    <svg class="elines" viewBox="0 0 375 812" preserveAspectRatio="none">
+      <line x1="45" y1="308" x2="195" y2="423" stroke="rgba(170,255,62,.4)" stroke-width="1" stroke-dasharray="30 170" class="eline" style="animation-delay:0s"/>
+      <line x1="195" y1="178" x2="330" y2="357" stroke="rgba(184,125,255,.4)" stroke-width="1" stroke-dasharray="25 175" class="eline" style="animation-delay:1.4s"/>
+      <line x1="105" y1="146" x2="330" y2="357" stroke="rgba(91,159,255,.3)" stroke-width="1" stroke-dasharray="20 180" class="eline" style="animation-delay:.8s"/>
+      <line x1="45" y1="308" x2="330" y2="357" stroke="rgba(170,255,62,.25)" stroke-width="1" stroke-dasharray="15 185" class="eline" style="animation-delay:2s"/>
+    </svg>
+    <div class="sp-content">
+      <div class="status-bar">
+        <span class="status-time">9:41</span>
+        <div class="status-icons">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M6 16v-8M10 16v-4M14 16v-6M18 16v-4M14 12h4"/></svg></span>
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18h.01M8.5 14.5A5 5 0 0 1 12 13a5 5 0 0 1 3.5 1.5M5 11a10 10 0 0 1 14 0M2 8a15 15 0 0 1 20 0"/></svg></span>
+          <span class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M20 11h2v2h-2zM6 11h6"/></svg></span>
+        </div>
+      </div>
+      <div class="sp-logo-area">
+        <div class="sp-mark">
+          <div class="sp-mark-glow"></div>
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span>
+        </div>
+        <div class="sp-brand">aurora</div>
+        <div class="sp-by">by Flui</div>
+        <div class="sp-tag">Recarga inteligente para quem dirige elétrico</div>
+      </div>
+      <div class="sp-bottom">
+        <div class="sp-props">
+          <div class="sp-prop"><div class="sp-icon"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></span></div><span class="sp-txt">Mapa de eletropostos em tempo real</span></div>
+          <div class="sp-prop"><div class="sp-icon"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span></div><span class="sp-txt">Avaliações estilo Guia Michelin</span></div>
+          <div class="sp-prop"><div class="sp-icon"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 12h1m8-9v1m8 8h1M5.6 5.6l.7.7m12.1-.7-.7.7M12 19a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"/></svg></span></div><span class="sp-txt">Planejamento de viagem offline</span></div>
+        </div>
+        <button class="btn-p" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></span> Explorar mapa</button>
+        <div class="pdots"><div class="pdot on"></div><div class="pdot"></div><div class="pdot"></div></div>
+        <div class="sp-skip" onclick="goTo('map')">Continuar sem conta →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ T2 MAPA ══ -->
+  <div class="screen" id="s-map">
+    <div class="status-bar" style="position:absolute;top:0;left:0;right:0;background:rgba(10,10,15,.6);backdrop-filter:blur(8px);z-index:50;">
+      <span class="status-time">9:41</span>
+      <div class="status-icons">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M6 16v-8M10 16v-4M14 16v-6M18 16v-4M14 12h4"/></svg></span>
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18h.01M8.5 14.5A5 5 0 0 1 12 13a5 5 0 0 1 3.5 1.5M5 11a10 10 0 0 1 14 0M2 8a15 15 0 0 1 20 0"/></svg></span>
+        <span class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M20 11h2v2h-2zM6 11h6"/></svg></span>
+      </div>
+    </div>
+    <div class="map-area">
+      <div class="rh" style="top:90px;height:32px;"></div><div class="rh" style="top:210px;height:32px;"></div><div class="rh" style="top:340px;height:32px;"></div><div class="rh" style="top:460px;height:22px;"></div>
+      <div class="rsh" style="top:150px;height:14px;"></div><div class="rsh" style="top:280px;height:14px;"></div><div class="rsh" style="top:408px;height:14px;"></div>
+      <div class="rv" style="left:65px;width:30px;"></div><div class="rv" style="left:175px;width:30px;"></div><div class="rv" style="left:290px;width:30px;"></div>
+      <div class="rsv" style="left:120px;width:14px;"></div><div class="rsv" style="left:235px;width:14px;"></div>
+      <div class="mb" style="top:8px;left:8px;width:50px;height:76px;"></div><div class="mb" style="top:8px;left:100px;width:70px;height:76px;"></div><div class="mb" style="top:8px;left:210px;width:74px;height:76px;"></div><div class="mb" style="top:8px;left:326px;width:42px;height:76px;"></div>
+      <div class="mb" style="top:128px;left:8px;width:50px;height:76px;"></div><div class="mb" style="top:128px;left:100px;width:70px;height:76px;"></div><div class="mb" style="top:128px;left:210px;width:74px;height:76px;"></div><div class="mb" style="top:128px;left:326px;width:42px;height:76px;"></div>
+      <div class="mb" style="top:250px;left:8px;width:50px;height:84px;"></div><div class="mb" style="top:250px;left:100px;width:120px;height:84px;"></div><div class="mb" style="top:250px;left:326px;width:42px;height:84px;"></div>
+      <div class="mb" style="top:380px;left:8px;width:50px;height:74px;"></div><div class="mb" style="top:380px;left:100px;width:70px;height:74px;"></div><div class="mb" style="top:380px;left:210px;width:74px;height:54px;"></div>
+      <div class="myloc" style="left:188px;top:262px;"><div class="loc-out"><div class="loc-in"></div></div></div>
+      <div class="pin pg sel" style="left:130px;top:202px;" onclick="showGC()"><div class="pbubble"><span class="ico" style="font-size:12px;"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span> Livre</div><div class="ptail"></div></div>
+      <div class="pin pa" style="left:270px;top:140px;" onclick="showGC()"><div class="pbubble"><span class="ico" style="font-size:12px;"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span> Ocupado</div><div class="ptail"></div></div>
+      <div class="pin pg" style="left:330px;top:320px;" onclick="showGC()"><div class="pbubble"><span class="ico" style="font-size:12px;"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span> Livre</div><div class="ptail"></div></div>
+      <div class="pin pr" style="left:80px;top:410px;"><div class="pbubble"><span class="ico" style="font-size:12px;"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span> Offline</div><div class="ptail"></div></div>
+      <div class="msearch">
+        <div class="si" onclick="goTo('search')">
+          <span class="ico" style="color:var(--t4);font-size:17px;"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></span>
+          <span class="si-ph">Buscar eletroposto...</span>
+          <div class="fchip-map"><span class="ico" style="font-size:12px;color:var(--green);"><svg viewBox="0 0 24 24"><circle cx="14" cy="6" r="2"/><path d="M4 6h8M16 6h4M8 12H4M20 12h-8"/><circle cx="10" cy="12" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 18h11M19 18h1"/></svg></span><span>Filtros</span></div>
+        </div>
+      </div>
+      <div class="fps"><div class="fp on">Aberto agora</div><div class="fp">CCS2</div><div class="fp">150kW+</div><div class="fp">+2</div></div>
+      <div class="mctrl">
+        <div class="mcb" style="color:var(--blue);"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18.5L3.5 7.5l17-3.5z"/></svg></span></div>
+        <div class="mcb" style="color:var(--t2);"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></div>
+        <div class="mcb" style="color:var(--t2);"><span class="ico"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></span></div>
+      </div>
+      <div class="gc" id="gc">
+        <div class="dh"></div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;"><div class="gc-name">Flui Batel</div><span class="badge bg">Livre</span></div>
+        <div class="gc-addr"><span class="ico" style="font-size:10px;"><svg viewBox="0 0 24 24"><path d="M12 11m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0"/><path d="M17.657 16.657L13.414 20.9a2 2 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/></svg></span> Av. do Batel, 1230 · 800m · ~9 min</div>
+        <div class="gc-stats">
+          <div class="gc-stat"><div class="gc-sl">Disponíveis</div><div class="gc-sv" style="color:var(--green);">3 / 4</div></div>
+          <div class="gc-stat"><div class="gc-sl">Potência</div><div class="gc-sv">150 kW</div></div>
+          <div class="gc-stat"><div class="gc-sl">Avaliação</div><div class="gc-sv" style="color:var(--pl);">★ 4.1</div></div>
+        </div>
+        <div class="gc-tags"><span class="tag">CCS2</span><span class="tag">CHAdeMO</span><span class="tag">Type 2</span><span class="tag">24h</span></div>
+        <div class="gc-acts">
+          <button class="gc-nb" onclick="goTo('detail')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18.5L3.5 7.5l17-3.5z"/></svg></span> Navegar até aqui</button>
+          <div class="gc-ib gc-trip" onclick="goTo('trip')" title="Planejar viagem"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span></div>
+          <div class="gc-ib" onclick="goTo('detail')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></span></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-bar">
+      <div class="nav-item active" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="goTo('search')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="goTo('trip')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="goTo('profile')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg></span><div class="nav-dot"></div></div>
+    </div>
+  </div>
+
+  <!-- ══ T3 FICHA ══ -->
+  <div class="screen" id="s-detail">
+    <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 16v-8M10 16v-4M14 16v-6M18 16v-4M14 12h4"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18h.01M8.5 14.5A5 5 0 0 1 12 13a5 5 0 0 1 3.5 1.5M5 11a10 10 0 0 1 14 0M2 8a15 15 0 0 1 20 0"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M20 11h2v2h-2zM6 11h6"/></svg></span></div></div>
+    <div class="top-bar">
+      <div class="icon-btn" onclick="goBack()"><span class="ico"><svg viewBox="0 0 24 24"><path d="M5 12h14M5 12l6 6M5 12l6-6"/></svg></span></div>
+      <span class="top-title">Ficha do ponto</span>
+      <div style="display:flex;gap:8px;">
+        <div class="icon-btn" style="color:var(--pl);" onclick="goTo('trip')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span></div>
+        <div class="icon-btn"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0M8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4"/></svg></span></div>
+      </div>
+    </div>
+    <div class="scroll">
+      <div class="pad" style="padding-bottom:20px;">
+        <div class="hero-map">
+          <div class="rh" style="top:50px;height:22px;background:#242836;"></div><div class="rh" style="top:95px;height:14px;background:#1e2230;"></div>
+          <div class="rv" style="left:55px;width:22px;background:#242836;"></div><div class="rv" style="left:155px;width:22px;background:#242836;"></div><div class="rv" style="left:240px;width:14px;background:#1e2230;"></div>
+          <div class="mb" style="top:8px;left:8px;width:41px;height:36px;"></div><div class="mb" style="top:8px;left:83px;width:66px;height:36px;"></div><div class="mb" style="top:8px;left:183px;width:50px;height:36px;"></div>
+          <div class="mb" style="top:78px;left:8px;width:41px;height:44px;"></div><div class="mb" style="top:78px;left:83px;width:66px;height:44px;"></div><div class="mb" style="top:78px;left:183px;width:50px;height:44px;"></div>
+          <div style="position:absolute;width:28px;height:28px;border-radius:50%;background:rgba(170,255,62,.15);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+          <div style="position:absolute;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--base);top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+          <div class="hero-ov"><span style="font-size:11px;color:var(--t3);">Av. do Batel, 1230 · Curitiba</span><span style="font-size:11px;font-weight:600;color:var(--green);">800m · ~9 min</span></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;"><div class="pt-name">Flui Batel</div><span class="badge bg" style="margin-top:4px;">Livre</span></div>
+        <div class="pt-addr">Av. do Batel, 1230 · Curitiba, PR</div>
+        <div class="rrow"><span class="stars">★★★★☆</span><span style="font-size:13px;font-weight:600;color:var(--pl);">4.1</span><span style="font-size:12px;color:var(--t4);">· 38 avaliações</span><span class="badge bp">Flui Select</span></div>
+        <div class="slabel">Status dos carregadores</div>
+        <div class="bento">
+          <div class="bc"><div class="bcl">Disponíveis</div><div class="bcv g">3</div><div class="bcs">de 4 total</div></div>
+          <div class="bc"><div class="bcl">Potência máx.</div><div class="bcv">150 <span style="font-size:13px;color:var(--t4);font-weight:400;">kW</span></div><div class="bcs">CCS2 · DC</div></div>
+          <div class="bc bw">
+            <div class="bcl" style="margin-bottom:8px;">Detalhe dos pontos</div>
+            <div class="crow"><div class="cdot" style="background:var(--green);"></div><div class="ci"><div class="cn">Ponto 1 · CCS2</div><div class="cs">150 kW · DC Fast Charge</div></div><span class="cst" style="color:var(--green);">Livre</span></div>
+            <div class="crow"><div class="cdot" style="background:var(--green);"></div><div class="ci"><div class="cn">Ponto 2 · CCS2</div><div class="cs">150 kW · DC Fast Charge</div></div><span class="cst" style="color:var(--green);">Livre</span></div>
+            <div class="crow"><div class="cdot" style="background:var(--amber);"></div><div class="ci"><div class="cn">Ponto 3 · CHAdeMO</div><div class="cs">50 kW · DC</div></div><span class="cst" style="color:var(--amber);">Ocupado</span></div>
+            <div class="crow"><div class="cdot" style="background:var(--green);"></div><div class="ci"><div class="cn">Ponto 4 · Type 2</div><div class="cs">22 kW · AC</div></div><span class="cst" style="color:var(--green);">Livre</span></div>
+          </div>
+        </div>
+        <div class="slabel">Movimento estimado</div>
+        <div class="bc bw" style="margin-bottom:14px;">
+          <div class="bcl" style="margin-bottom:8px;">Horários de menor movimento</div>
+          <div class="pbars"><div class="pbar" style="height:25%;background:#1e2230;"></div><div class="pbar" style="height:35%;background:#1e2230;"></div><div class="pbar" style="height:20%;background:var(--green);opacity:.9;"></div><div class="pbar" style="height:55%;background:#1e2230;"></div><div class="pbar" style="height:80%;background:var(--amber);opacity:.8;"></div><div class="pbar" style="height:100%;background:var(--amber);opacity:.9;"></div><div class="pbar" style="height:70%;background:#1e2230;"></div><div class="pbar" style="height:40%;background:#1e2230;"></div></div>
+          <div class="plbls"><span class="plbl">8h</span><span class="plbl">10h</span><span class="plbl now">agora</span><span class="plbl">14h</span><span class="plbl">17h</span><span class="plbl">18h</span><span class="plbl">20h</span><span class="plbl">22h</span></div>
+          <div style="margin-top:6px;font-size:10px;color:var(--green);">Ótimo momento para recarregar</div>
+        </div>
+        <div class="slabel">Comodidades próximas</div>
+        <div class="ams">
+          <div class="am"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 14c0 3 2 5 7 5s7-2 7-5V8H3v6zM17 9h1a3 3 0 0 1 0 6h-1M8 3v1M10 3v2M12 3v1"/></svg></span>Café</div>
+          <div class="am"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 21h18M4 21V11M20 21V11M3 11l2-7h14l2 7M9 11v5a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-5"/><path d="M9 11H3M21 11h-6M9 11a3 3 0 0 0 6 0"/></svg></span>Shopping</div>
+          <div class="am"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18h.01M8.5 14.5A5 5 0 0 1 12 13a5 5 0 0 1 3.5 1.5M5 11a10 10 0 0 1 14 0M2 8a15 15 0 0 1 20 0"/></svg></span>Wi-Fi</div>
+          <div class="am"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="9"/><path d="M12 7v5l2 2M9 11h6"/></svg></span>24 horas</div>
+          <div class="am"><span class="ico"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span>Estacionamento</div>
+        </div>
+        <div class="slabel">Avaliações dos motoristas</div>
+        <div class="revc"><div class="rh2"><div class="ru"><div class="rav">MR</div><div><div class="rn">Mariana R.</div><div class="rd">há 3 dias</div></div></div><span class="stars">★★★★★</span></div><div class="rt">Ponto impecável. Carregou meu Model 3 em menos de 20 min.</div></div>
+        <div class="revc"><div class="rh2"><div class="ru"><div class="rav" style="background:rgba(170,255,62,.1);color:var(--green);">GT</div><div><div class="rn">Gabriel T.</div><div class="rd">há 1 semana</div></div></div><span class="stars">★★★★☆</span></div><div class="rt">Ponto 3 ocupado mas os outros três livres. Sinalização ótima.</div></div>
+        <div class="rall" onclick="goTo('review')">Ver todas as avaliações →</div>
+        <div class="divider"></div>
+        <button class="btn-p" onclick="goTo('map')" style="margin-bottom:10px;"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18.5L3.5 7.5l17-3.5z"/></svg></span> Navegar até aqui</button>
+        <button class="btn-s" onclick="goTo('review')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span> Avaliar este ponto</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ T4 BUSCA ══ -->
+  <div class="screen" id="s-search">
+    <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 16v-8M10 16v-4M14 16v-6M18 16v-4M14 12h4"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18h.01M8.5 14.5A5 5 0 0 1 12 13a5 5 0 0 1 3.5 1.5M5 11a10 10 0 0 1 14 0M2 8a15 15 0 0 1 20 0"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M20 11h2v2h-2zM6 11h6"/></svg></span></div></div>
+    <div class="top-bar" style="padding-bottom:4px;"><div class="icon-btn" onclick="goBack()"><span class="ico"><svg viewBox="0 0 24 24"><path d="M5 12h14M5 12l6 6M5 12l6-6"/></svg></span></div><span class="top-title">Busca</span><div style="width:36px;"></div></div>
+    <div class="sba"><span class="ico" style="color:var(--t4);font-size:17px;"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></span><span class="sv">Curitiba, PR</span><div class="cbtn"><span class="ico"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></span></div></div>
+    <div class="scroll">
+      <div class="fsec">
+        <!-- veículo selecionado como filtro automático -->
+        <div style="background:linear-gradient(135deg,rgba(124,63,204,.14),rgba(170,255,62,.06));border:.5px solid rgba(170,255,62,.2);border-radius:14px;padding:12px 14px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:32px;border-radius:9px;background:rgba(170,255,62,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="ico" style="font-size:15px;color:var(--green);"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span></div>
+            <div style="flex:1;">
+              <div style="font-size:12px;font-weight:600;color:var(--t1);">Tesla Model 3 · CCS2 · 170kW</div>
+              <div style="font-size:10px;color:var(--green);margin-top:2px;">Mostrando apenas pontos compatíveis</div>
+            </div>
+            <span style="font-size:11px;color:var(--pl);cursor:pointer;white-space:nowrap;" onclick="goTo('profile')">Trocar →</span>
+          </div>
+        </div>
+        <div class="fdiv"></div>
+        <div class="ftitle">Comodidades</div>
+        <div class="ckrow"><div class="ckbox chk">✓</div><span class="cklbl">Aberto agora</span></div>
+        <div class="ckrow"><div class="ckbox chk">✓</div><span class="cklbl">Estacionamento</span></div>
+        <div class="ckrow"><div class="ckbox unc"></div><span class="cklbl">Wi-Fi</span></div>
+        <div class="ckrow"><div class="ckbox unc"></div><span class="cklbl">Café próximo</span></div>
+        <div class="ckrow"><div class="ckbox unc"></div><span class="cklbl">Acessível</span></div>
+      </div>
+      <div class="rhead"><span class="rc">14 RESULTADOS</span><span class="rs">distância ↓</span></div>
+      <div class="rcard" onclick="goTo('detail')"><div class="rct"><div><div class="rcname">Flui Batel</div><div class="rcaddr">Av. do Batel · 800m</div></div><span class="badge bg">Livre</span></div><div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">150 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 4.1</span><span style="font-size:11px;color:var(--t4);">CCS2</span><span style="margin-left:auto;font-size:16px;color:var(--green);">→</span></div></div>
+      <div class="rcard" onclick="goTo('detail')"><div class="rct"><div><div class="rcname">Flui Água Verde</div><div class="rcaddr">R. Dep. Westphalen · 1.2km</div></div><span class="badge bg">Livre</span></div><div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">150 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 4.4</span><span style="font-size:11px;color:var(--t4);">CCS2</span><span style="margin-left:auto;font-size:16px;color:var(--green);">→</span></div></div>
+      <div class="rcard" onclick="goTo('detail')"><div class="rct"><div><div class="rcname">Flui Centro</div><div class="rcaddr">R. XV de Novembro · 2.1km</div></div><span class="badge ba">Ocupado</span></div><div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">50 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 3.8</span><span style="font-size:11px;color:var(--t4);">CHAdeMO</span><span style="margin-left:auto;font-size:16px;color:var(--t5);">→</span></div></div>
+      <div style="height:20px;"></div>
+    </div>
+    <div class="nav-bar">
+      <div class="nav-item" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item active" onclick="goTo('search')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="goTo('trip')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="goTo('profile')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg></span><div class="nav-dot"></div></div>
+    </div>
+  </div>
+
+  <!-- ══ T5 AVALIAÇÃO 3 ETAPAS ══ -->
+  <div class="screen" id="s-review">
+    <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 16v-8M10 16v-4M14 16v-6M18 16v-4M14 12h4"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18h.01M8.5 14.5A5 5 0 0 1 12 13a5 5 0 0 1 3.5 1.5M5 11a10 10 0 0 1 14 0M2 8a15 15 0 0 1 20 0"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M20 11h2v2h-2zM6 11h6"/></svg></span></div></div>
+    <div class="top-bar">
+      <div class="icon-btn" onclick="goBack()"><span class="ico"><svg viewBox="0 0 24 24"><path d="M5 12h14M5 12l6 6M5 12l6-6"/></svg></span></div>
+      <span class="top-title">Avaliar ponto</span>
+      <div style="width:36px;"></div>
+    </div>
+
+    <!-- step indicator -->
+    <div style="padding:4px 18px 16px;">
+      <div style="display:flex;align-items:flex-start;justify-content:center;gap:0;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div class="rstep-dot active" id="sd1">1</div>
+          <span style="font-size:9px;color:var(--green);">Impressão</span>
+        </div>
+        <div class="rstep-line" id="sl1" style="margin-top:14px;"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div class="rstep-dot idle" id="sd2">2</div>
+          <span style="font-size:9px;color:var(--t5);">Critérios</span>
+        </div>
+        <div class="rstep-line" id="sl2" style="margin-top:14px;"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div class="rstep-dot idle" id="sd3">3</div>
+          <span style="font-size:9px;color:var(--t5);">Comentário</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ponto -->
+    <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:16px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin:0 14px 16px;">
+      <div><div style="font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--t1);">Flui Batel</div><div style="font-size:11px;color:var(--t4);margin-top:2px;">Av. do Batel, 1230 · Curitiba</div></div>
+      <span class="badge bg">Livre</span>
+    </div>
+
+    <div class="scroll">
+      <!-- ETAPA 1: impressão geral -->
+      <div class="step-panel active" id="step1">
+        <div style="padding:0 18px 16px;">
+          <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--t1);margin-bottom:4px;">Como foi no geral?</div>
+          <div style="font-size:12px;color:var(--t4);">Etapa 1 de 3 · leva 3 segundos</div>
+        </div>
+        <div class="emoji-row">
+          <div class="emoji-btn bad" id="eb1" onclick="selectEmoji('bad')"><div class="emoji-face">😤</div><div class="emoji-label">Ruim</div></div>
+          <div class="emoji-btn ok" id="eb2" onclick="selectEmoji('ok')"><div class="emoji-face">😐</div><div class="emoji-label">Regular</div></div>
+          <div class="emoji-btn" id="eb3" onclick="selectEmoji('good')" style="border-color:var(--gb);background:var(--gd);" class="selected"><div class="emoji-face">😊</div><div class="emoji-label" style="color:var(--t1);">Boa</div></div>
+        </div>
+        <div style="padding:0 14px 16px;background:rgba(170,255,62,.06);margin:0 14px;border-radius:12px;border:.5px solid var(--gb);">
+          <div style="font-size:11px;color:var(--green);font-weight:600;padding-top:10px;margin-bottom:6px;">+5 créditos Flui</div>
+          <div style="font-size:11px;color:var(--t3);">só por avaliar você já ganha créditos para usar em recargas parceiras</div>
+        </div>
+        <div style="height:16px;"></div>
+        <div class="step-nav">
+          <button class="step-next" onclick="goStep(2)" style="flex:1;">Próximo <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+        </div>
+      </div>
+
+      <!-- ETAPA 2: critérios detalhados -->
+      <div class="step-panel" id="step2">
+        <div style="padding:0 18px 16px;">
+          <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--t1);margin-bottom:4px;">Avalie por critério</div>
+          <div style="font-size:12px;color:var(--t4);">Etapa 2 de 3 · opcional · +15 créditos</div>
+        </div>
+        <div class="ccard"><div class="cname">Disponibilidade</div><div class="cdesc">Carregadores livres ao chegar</div><div class="srow"><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn emp">★</div></div></div>
+        <div class="ccard"><div class="cname">Qualidade</div><div class="cdesc">Estado dos equipamentos</div><div class="srow"><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div></div></div>
+        <div class="ccard"><div class="cname">Comodidades</div><div class="cdesc">Conforto e serviços próximos</div><div class="srow"><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn emp">★</div><div class="sbtn emp">★</div></div></div>
+        <div class="ccard"><div class="cname">Sinalização</div><div class="cdesc">Facilidade de encontrar e usar</div><div class="srow"><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn emp">★</div></div></div>
+        <div class="ocard"><span class="olbl">Nota geral calculada</span><span class="oval">★ 4.0 / 5.0</span></div>
+        <div class="step-nav">
+          <button class="step-back" onclick="goStep(1)"><span class="ico"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Voltar</button>
+          <button class="step-next" onclick="goStep(3)">Próximo <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+        </div>
+      </div>
+
+      <!-- ETAPA 3: comentário livre -->
+      <div class="step-panel" id="step3">
+        <div style="padding:0 18px 16px;">
+          <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--t1);margin-bottom:4px;">Quer contar mais?</div>
+          <div style="font-size:12px;color:var(--t4);">Etapa 3 de 3 · totalmente opcional · +20 créditos com foto</div>
+        </div>
+        <div class="cmtarea"><div class="cmtlbl">Comentário</div><div class="cmtph">Compartilhe sua experiência...</div></div>
+        <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px 14px;margin:0 14px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--pd);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--pl);"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span></div>
+          <div style="flex:1;"><div style="font-size:13px;color:var(--t2);font-weight:500;">Adicionar foto</div><div style="font-size:10px;color:var(--t4);margin-top:2px;">+10 créditos por foto aprovada</div></div>
+          <span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+        </div>
+        <div class="credit-card">
+          <div class="credit-label">Créditos que você vai ganhar</div>
+          <div class="credit-val">+40 créditos</div>
+          <div class="credit-sub">= R$ 2,00 em recargas parceiras</div>
+        </div>
+        <div class="step-nav">
+          <button class="step-back" onclick="goStep(2)"><span class="ico"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span> Voltar</button>
+          <button class="step-next" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M10 14L21 3M21 3l-6.5 18a.55.55 0 0 1-1 0L10 14l-7-3.5a.55.55 0 0 1 0-1L21 3"/></svg></span> Enviar avaliação</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ T6 PLANEJE SUA VIAGEM ══ -->
+  <div class="screen" id="s-trip">
+    <div class="status-bar"><span class="status-time">9:41</span><div class="status-icons"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 16v-8M10 16v-4M14 16v-6M18 16v-4M14 12h4"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18h.01M8.5 14.5A5 5 0 0 1 12 13a5 5 0 0 1 3.5 1.5M5 11a10 10 0 0 1 14 0M2 8a15 15 0 0 1 20 0"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M20 11h2v2h-2zM6 11h6"/></svg></span></div></div>
+    <div class="top-bar">
+      <div class="icon-btn" onclick="goBack()"><span class="ico"><svg viewBox="0 0 24 24"><path d="M5 12h14M5 12l6 6M5 12l6-6"/></svg></span></div>
+      <span class="top-title">Planejar viagem</span>
+      <div style="width:36px;"></div>
+    </div>
+    <div class="scroll">
+      <div class="trip-hero">
+        <div class="trip-hero-glow"></div>
+        <div class="trip-title">Planeje sua rota</div>
+        <div class="trip-sub">Calculamos as paradas de recarga ideais para você</div>
+      </div>
+      <div style="height:14px;background:var(--base);"></div>
+      <div class="route-card">
+        <div class="route-input">
+          <div class="route-dot" style="background:var(--blue);box-shadow:0 0 6px var(--blue);"></div>
+          <span class="route-label">Origem</span>
+          <span class="route-val">Curitiba, PR</span>
+        </div>
+        <div style="display:flex;margin-left:4px;padding:3px 0;"><div style="width:1px;height:12px;background:rgba(255,255,255,.1);"></div></div>
+        <div class="route-input">
+          <div class="route-dot" style="background:var(--green);box-shadow:0 0 6px var(--green);"></div>
+          <span class="route-label">Destino</span>
+          <span class="route-val">Florianópolis, SC</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 14px 12px;">
+        <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:12px;padding:10px 12px;">
+          <div style="font-size:10px;color:var(--t4);margin-bottom:4px;">Veículo</div>
+          <div style="font-size:13px;font-weight:600;color:var(--t1);">Tesla Model 3</div>
+          <div style="font-size:10px;color:var(--t4);">Autonomia: 350 km</div>
+        </div>
+        <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:12px;padding:10px 12px;">
+          <div style="font-size:10px;color:var(--t4);margin-bottom:4px;">Bateria atual</div>
+          <div style="font-size:13px;font-weight:600;color:var(--green);">78%</div>
+          <div style="font-size:10px;color:var(--t4);">~273 km restantes</div>
+        </div>
+      </div>
+      <div class="offline-banner">
+        <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 5v6m0 4h.01"/></svg></span>
+        <span class="offline-txt">Dados da rota salvos offline · funciona sem internet</span>
+      </div>
+      <div style="padding:0 14px 8px;"><div class="slabel">3 paradas calculadas · ~300 km · 4h20 total</div></div>
+      <div class="stop-card"><div class="stop-num">1</div><div class="stop-info"><div class="stop-name">Flui Tijucas</div><div class="stop-detail">BR-101, km 162 · chegada com ~28% de bateria</div></div><span class="stop-time">+22 min</span></div>
+      <div class="stop-card"><div class="stop-num">2</div><div class="stop-info"><div class="stop-name">Flui Palhoça</div><div class="stop-detail">Av. Eng. Max Mauel, 900 · chegada com ~35%</div></div><span class="stop-time">+18 min</span></div>
+      <div class="stop-card" style="border-color:var(--gb);background:rgba(170,255,62,.04);"><div class="stop-num" style="background:var(--green);color:#0a1400;border:none;">✓</div><div class="stop-info"><div class="stop-name" style="color:var(--green);">Florianópolis — destino</div><div class="stop-detail">chegada estimada com ~42% de bateria</div></div><span class="stop-time" style="color:var(--pl);">15:40</span></div>
+      <div style="padding:14px 14px 24px;"><button class="btn-p" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18.5L3.5 7.5l17-3.5z"/></svg></span> Iniciar navegação</button></div>
+    </div>
+    <div class="nav-bar">
+      <div class="nav-item" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="goTo('search')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item active"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="goTo('profile')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg></span><div class="nav-dot"></div></div>
+    </div>
+  </div>
+
+  <!-- T7 PERFIL -->
+  <div class="screen" id="s-profile">
+    <div class="status-bar" style="position:relative;z-index:10;"><span class="status-time">9:41</span><div class="status-icons"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 16v-8M10 16v-4M14 16v-6M18 16v-4M14 12h4"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18h.01M8.5 14.5A5 5 0 0 1 12 13a5 5 0 0 1 3.5 1.5M5 11a10 10 0 0 1 14 0M2 8a15 15 0 0 1 20 0"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M20 11h2v2h-2zM6 11h6"/></svg></span></div></div>
+    <div class="scroll">
+      <div class="phero"><div class="pg1"></div><div class="pg2"></div>
+        <div class="pavwrap"><div class="pav">AS</div><div class="pname">Ana Silva</div><div class="psub">Motorista EV · desde 2023</div></div>
+      </div>
+      <div style="height:16px;background:var(--base);"></div>
+      <div class="pstats">
+        <div class="pst"><div class="pstv g">12</div><div class="pstl">Recargas</div></div>
+        <div class="pst"><div class="pstv">4</div><div class="pstl">Favoritos</div></div>
+        <div class="pst"><div class="pstv p">★ 4.3</div><div class="pstl">Avaliações</div></div>
+      </div>
+      <div class="pad">
+        <!-- carro selecionado -->
+        <div class="slabel" style="margin-bottom:10px;">Meu veículo</div>
+        <div style="background:linear-gradient(135deg,rgba(124,63,204,.18),rgba(170,255,62,.08));border:.5px solid rgba(170,255,62,.25);border-radius:16px;padding:14px;margin-bottom:8px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:rgba(170,255,62,.12);border:.5px solid rgba(170,255,62,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;"><span class="ico" style="color:var(--green);font-size:22px;"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span></div>
+            <div style="flex:1;">
+              <div style="font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--t1);">Tesla Model 3</div>
+              <div style="font-size:11px;color:var(--t4);margin-top:2px;">2023 · Long Range · AWD</div>
+            </div>
+            <span class="badge bg" style="font-size:10px;">Ativo</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;">
+            <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:7px 8px;text-align:center;">
+              <div style="font-size:9px;color:var(--t4);">Conector</div>
+              <div style="font-size:11px;font-weight:700;color:var(--t1);margin-top:2px;">CCS2</div>
+            </div>
+            <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:7px 8px;text-align:center;">
+              <div style="font-size:9px;color:var(--t4);">Potência</div>
+              <div style="font-size:11px;font-weight:700;color:var(--green);margin-top:2px;">170 kW</div>
+            </div>
+            <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:7px 8px;text-align:center;">
+              <div style="font-size:9px;color:var(--t4);">Autonomia</div>
+              <div style="font-size:11px;font-weight:700;color:var(--t1);margin-top:2px;">350 km</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--green);background:rgba(170,255,62,.08);border-radius:8px;padding:6px 10px;">O mapa já filtra automaticamente os pontos compatíveis com este carro</div>
+        </div>
+
+        <!-- outros veículos -->
+        <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.04);border:.5px solid var(--b1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="ico" style="font-size:16px;color:var(--t4);"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span></div>
+          <div style="flex:1;"><div style="font-size:13px;color:var(--t3);">BMW iX3 · 2022</div><div style="font-size:10px;color:var(--t5);margin-top:2px;">CCS2 · 100 kW · 285 km</div></div>
+          <span style="font-size:11px;color:var(--pl);cursor:pointer;">Usar este</span>
+        </div>
+        <div style="background:var(--surface);border:.5px dashed rgba(255,255,255,.1);border-radius:14px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;cursor:pointer;">
+          <div style="width:36px;height:36px;border-radius:10px;background:var(--gd);border:.5px solid var(--gb);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="ico" style="font-size:16px;color:var(--green);"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></div>
+          <div style="flex:1;font-size:13px;color:var(--green);font-weight:500;">Cadastrar outro veículo</div>
+          <span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+        </div>
+
+        <div class="slabel" style="margin-bottom:10px;">Favoritos</div>
+        <div class="fcard" onclick="goTo('detail')"><div class="fdot" style="background:var(--green);"></div><div class="fi"><div class="fn">Flui Batel</div><div class="fa">Av. do Batel · 800m</div></div><span class="badge bg" style="font-size:10px;">Livre</span><span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span></div>
+        <div class="fcard" onclick="goTo('detail')"><div class="fdot" style="background:var(--green);"></div><div class="fi"><div class="fn">Flui Água Verde</div><div class="fa">R. Dep. Westphalen</div></div><span class="badge bg" style="font-size:10px;">Livre</span><span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span></div>
+        <div class="slabel" style="margin:14px 0 10px;">Histórico recente</div>
+        <div class="hcard"><div class="hico"><span class="ico"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span></div><div class="hi"><div class="hn">Flui Batel</div><div class="hd">Hoje, 10:23</div></div><span class="hkw">32 kWh · 22 min</span></div>
+        <div class="hcard"><div class="hico"><span class="ico"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span></div><div class="hi"><div class="hn">Flui Shopping Mueller</div><div class="hd">Ontem, 18:45</div></div><span class="hkw">18 kWh · 14 min</span></div>
+        <div class="hcard"><div class="hico"><span class="ico"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span></div><div class="hi"><div class="hn">Flui Água Verde</div><div class="hd">12/05, 09:10</div></div><span class="hkw">45 kWh · 31 min</span></div>
+        <div style="height:20px;"></div>
+      </div>
+    </div>
+    <div class="nav-bar">
+      <div class="nav-item" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="goTo('search')"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item" onclick="goTo('trip')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span><div class="nav-dot"></div></div>
+      <div class="nav-item active"><span class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg></span><div class="nav-dot"></div></div>
+    </div>
+  </div>
+
+</div>
+<div class="dlabel">Aurora by Flui — Protótipo App · Etapa 1</div>
+<div class="sinds">
+  <div class="sind on" onclick="goTo('splash')" title="Splash"></div>
+  <div class="sind" onclick="goTo('map')" title="Mapa"></div>
+  <div class="sind" onclick="goTo('detail')" title="Ficha"></div>
+  <div class="sind" onclick="goTo('search')" title="Busca"></div>
+  <div class="sind" onclick="goTo('review')" title="Avaliação"></div>
+  <div class="sind" onclick="goTo('trip')" title="Viagem"></div>
+  <div class="sind" onclick="goTo('profile')" title="Perfil"></div>
+</div>
+</div>
+<script>
+(function(){
+  const c=document.getElementById('spStars');
+  if(!c)return;
+  for(let i=0;i<40;i++){
+    const s=document.createElement('div');
+    s.className='sp-star';
+    const sz=Math.random()*2+1;
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+(Math.random()*65)+'%;left:'+(Math.random()*100)+'%;animation:twinkle '+(2+Math.random()*3)+'s ease-in-out '+(Math.random()*4)+'s infinite;';
+    c.appendChild(s);
+  }
+})();
+const SCREENS={splash:'s-splash',map:'s-map',detail:'s-detail',search:'s-search',review:'s-review',trip:'s-trip',profile:'s-profile'};
+const ORDER=['splash','map','detail','search','review','trip','profile'];
+let cur='splash',hist=['splash'];
+function goTo(name){
+  if(name===cur)return;
+  const prev=document.getElementById(SCREENS[cur]);
+  const next=document.getElementById(SCREENS[name]);
+  prev.classList.remove('active');prev.classList.add('exit-left');
+  setTimeout(()=>prev.classList.remove('exit-left'),340);
+  next.style.transform='translateX(100%)';next.style.opacity='0';
+  next.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{next.style.transform='';next.style.opacity='';}));
+  hist.push(name);cur=name;updateUI();
+  if(name==='map')setTimeout(showGC,420);
+  if(name==='review'){curStep=1;updateStepUI();}
+}
+function goBack(){
+  if(hist.length<2)return;
+  hist.pop();
+  const prev=hist[hist.length-1];
+  document.getElementById(SCREENS[cur]).classList.remove('active');
+  const tgt=document.getElementById(SCREENS[prev]);
+  tgt.style.transform='translateX(-55px)';tgt.style.opacity='0.4';
+  tgt.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{tgt.style.transform='';tgt.style.opacity='';}));
+  cur=prev;updateUI();
+}
+function updateUI(){
+  const idx=ORDER.indexOf(cur);
+  document.querySelectorAll('.sind').forEach((el,i)=>el.classList.toggle('on',i===idx));
+}
+function showGC(){const g=document.getElementById('gc');if(g)g.classList.add('vis');}
+let curStep=1;
+function goStep(n){curStep=n;updateStepUI();}
+function updateStepUI(){
+  [1,2,3].forEach(i=>{
+    document.getElementById('step'+i).classList.toggle('active',i===curStep);
+    const d=document.getElementById('sd'+i);
+    d.classList.remove('done','active','idle');
+    if(i<curStep)d.classList.add('done');
+    else if(i===curStep)d.classList.add('active');
+    else d.classList.add('idle');
+    if(i<3){const l=document.getElementById('sl'+i);if(l)l.classList.toggle('done',i<curStep);}
+  });
+}
+function selectEmoji(type){
+  ['eb1','eb2','eb3'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.classList.remove('selected');const lbl=el.querySelector('.emoji-label');if(lbl)lbl.style.color='';}
+  });
+  const map={bad:'eb1',ok:'eb2',good:'eb3'};
+  const t=document.getElementById(map[type]);
+  if(t){t.classList.add('selected');const lbl=t.querySelector('.emoji-label');if(lbl)lbl.style.color='var(--t1)';}
+}
+document.querySelectorAll('.srow').forEach(row=>{
+  const btns=row.querySelectorAll('.sbtn');
+  btns.forEach((b,i)=>{b.addEventListener('click',()=>{btns.forEach((x,j)=>{x.classList.toggle('fil',j<=i);x.classList.toggle('emp',j>i);});});});
+});
+document.querySelectorAll('.fc').forEach(c=>{c.addEventListener('click',()=>{c.classList.toggle('on');c.classList.toggle('off');});});
+document.querySelectorAll('.ckrow').forEach(row=>{row.addEventListener('click',()=>{const cb=row.querySelector('.ckbox');const chk=cb.classList.contains('chk');cb.classList.toggle('chk',!chk);cb.classList.toggle('unc',chk);cb.textContent=chk?'':'✓';});});
+setTimeout(showGC,200);
+</script>
+</body>
+</html>
