@@ -607,6 +607,7 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
         <div class="ckrow"><div class="ckbox unc"></div><span class="cklbl">Wi-Fi</span></div>
         <div class="ckrow"><div class="ckbox unc"></div><span class="cklbl">Café próximo</span></div>
         <div class="ckrow"><div class="ckbox unc"></div><span class="cklbl">Acessível</span></div>
+        <div class="ckrow"><div class="ckbox unc"></div><span class="cklbl">Hospedagem próxima</span></div>
       </div>
       <div class="rhead"><span class="rc">14 RESULTADOS</span><span class="rs">distância ↓</span></div>
       <div class="rcard" onclick="goTo('detail')"><div class="rct"><div><div class="rcname">Flui Batel</div><div class="rcaddr">Av. do Batel · 800m</div></div><span class="badge bg">Livre</span></div><div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">150 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 4.1</span><span style="font-size:11px;color:var(--t4);">CCS2</span><span style="margin-left:auto;font-size:16px;color:var(--green);">→</span></div></div>
@@ -749,17 +750,49 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
           <span class="route-val">Florianópolis, SC</span>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 14px 12px;">
-        <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:12px;padding:10px 12px;">
-          <div style="font-size:10px;color:var(--t4);margin-bottom:4px;">Veículo</div>
-          <div style="font-size:13px;font-weight:600;color:var(--t1);">Tesla Model 3</div>
-          <div style="font-size:10px;color:var(--t4);">Autonomia: 350 km</div>
+      <!-- card veículo com bluetooth -->
+      <div style="background:var(--surface);border:.5px solid rgba(170,255,62,.25);border-radius:14px;padding:12px 14px;margin:0 14px 12px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="width:38px;height:38px;border-radius:10px;background:rgba(170,255,62,.1);border:.5px solid rgba(170,255,62,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <span class="ico" style="font-size:18px;color:var(--green);"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span>
+          </div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+              <div style="font-size:13px;font-weight:700;color:var(--t1);">Tesla Model 3</div>
+              <span style="font-size:9px;font-weight:700;background:#1a3a00;color:var(--green);border:.5px solid rgba(170,255,62,.3);border-radius:4px;padding:1px 5px;">EV</span>
+              <span style="display:flex;align-items:center;gap:3px;font-size:9px;color:var(--blue);background:rgba(91,159,255,.1);border:.5px solid rgba(91,159,255,.25);border-radius:4px;padding:1px 5px;"><span class="ico" style="font-size:10px;color:var(--blue);"><svg viewBox="0 0 24 24"><path d="M7 17C5 15.5 4 13.9 4 12s1-3.5 3-4.8M17 7c2 1.5 3 3.1 3 5s-1 3.5-3 4.8M9.5 10.5C8.8 11.1 8.5 11.5 8.5 12s.3.9 1 1.5M14.5 13.5c.7-.6 1-.9 1-1.5s-.3-.9-1-1.5M12 12h.01"/></svg></span>Detectado</span>
+            </div>
+            <div style="font-size:10px;color:var(--t4);">2023 · Long Range · 350 km autonomia</div>
+          </div>
+          <span style="font-size:11px;color:var(--pl);cursor:pointer;white-space:nowrap;" onclick="showCarPicker()">Trocar →</span>
         </div>
-        <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:12px;padding:10px 12px;">
-          <div style="font-size:10px;color:var(--t4);margin-bottom:4px;">Bateria atual</div>
-          <div style="font-size:13px;font-weight:600;color:var(--green);">78%</div>
-          <div style="font-size:10px;color:var(--t4);">~273 km restantes</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:8px 10px;">
+            <div style="font-size:9px;color:var(--t4);">Bateria atual</div>
+            <div style="font-size:16px;font-weight:800;color:var(--green);line-height:1.2;margin-top:2px;">78%</div>
+            <div style="height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-top:5px;overflow:hidden;"><div style="height:100%;width:78%;background:var(--green);border-radius:2px;"></div></div>
+            <div style="font-size:9px;color:var(--t4);margin-top:3px;">~273 km restantes</div>
+          </div>
+          <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:8px 10px;">
+            <div style="font-size:9px;color:var(--t4);">Conector</div>
+            <div style="font-size:14px;font-weight:800;color:var(--t1);line-height:1.2;margin-top:2px;">CCS2</div>
+            <div style="font-size:9px;color:var(--green);margin-top:5px;">170 kW máx. aceito</div>
+            <div style="font-size:9px;color:var(--t4);margin-top:2px;">Filtro automático ativo</div>
+          </div>
         </div>
+      </div>
+      <!-- modal trocar carro (oculto) -->
+      <div id="carPicker" style="display:none;position:absolute;bottom:90px;left:14px;right:14px;z-index:100;background:#1C1C28;border:.5px solid var(--b2);border-radius:16px;padding:14px;box-shadow:0 8px 32px rgba(0,0,0,.6);">
+        <div style="font-size:12px;font-weight:600;color:var(--t2);margin-bottom:10px;">Trocar veículo</div>
+        <div style="background:rgba(170,255,62,.08);border:.5px solid rgba(170,255,62,.25);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+          <div style="flex:1;"><div style="display:flex;align-items:center;gap:5px;"><div style="font-size:12px;font-weight:600;color:var(--t1);">Tesla Model 3</div><span style="font-size:9px;font-weight:700;background:#1a3a00;color:var(--green);border-radius:4px;padding:1px 5px;">EV</span><span style="font-size:9px;color:var(--blue);">● BT</span></div><div style="font-size:10px;color:var(--t4);">CCS2 · 170 kW · 350 km</div></div>
+          <span style="font-size:11px;color:var(--green);font-weight:600;">Ativo</span>
+        </div>
+        <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="hideCarPicker()">
+          <div style="flex:1;"><div style="display:flex;align-items:center;gap:5px;"><div style="font-size:12px;font-weight:600;color:var(--t2);">BMW iX3</div><span style="font-size:9px;font-weight:700;background:rgba(124,63,204,.2);color:var(--pl);border-radius:4px;padding:1px 5px;">EV</span></div><div style="font-size:10px;color:var(--t4);">CCS2 · 100 kW · 285 km</div></div>
+          <span style="font-size:11px;color:var(--pl);">Usar</span>
+        </div>
+        <div style="text-align:center;cursor:pointer;" onclick="hideCarPicker()"><span style="font-size:12px;color:var(--t4);">Fechar</span></div>
       </div>
       <div class="offline-banner">
         <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 5v6m0 4h.01"/></svg></span>
@@ -799,8 +832,14 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
           <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(170,255,62,.12);border:.5px solid rgba(170,255,62,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;"><span class="ico" style="color:var(--green);font-size:22px;"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span></div>
             <div style="flex:1;">
-              <div style="font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--t1);">Tesla Model 3</div>
-              <div style="font-size:11px;color:var(--t4);margin-top:2px;">2023 · Long Range · AWD</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+                <div style="font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--t1);">Tesla Model 3</div>
+                <span style="font-size:9px;font-weight:700;background:#1a3a00;color:var(--green);border:.5px solid rgba(170,255,62,.3);border-radius:4px;padding:1px 5px;">EV</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <span style="font-size:10px;color:var(--t4);">2023 · Long Range · AWD</span>
+                <span style="display:flex;align-items:center;gap:3px;font-size:9px;color:var(--blue);background:rgba(91,159,255,.1);border:.5px solid rgba(91,159,255,.2);border-radius:4px;padding:1px 5px;"><span class="ico" style="font-size:10px;color:var(--blue);"><svg viewBox="0 0 24 24"><path d="M7 17C5 15.5 4 13.9 4 12s1-3.5 3-4.8M17 7c2 1.5 3 3.1 3 5s-1 3.5-3 4.8M9.5 10.5C8.8 11.1 8.5 11.5 8.5 12s.3.9 1 1.5M14.5 13.5c.7-.6 1-.9 1-1.5s-.3-.9-1-1.5M12 12h.01"/></svg></span>Bluetooth</span>
+              </div>
             </div>
             <span class="badge bg" style="font-size:10px;">Ativo</span>
           </div>
@@ -824,13 +863,58 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
         <!-- outros veículos -->
         <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;">
           <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.04);border:.5px solid var(--b1);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="ico" style="font-size:16px;color:var(--t4);"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span></div>
-          <div style="flex:1;"><div style="font-size:13px;color:var(--t3);">BMW iX3 · 2022</div><div style="font-size:10px;color:var(--t5);margin-top:2px;">CCS2 · 100 kW · 285 km</div></div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:2px;">
+              <div style="font-size:13px;color:var(--t2);font-weight:500;">BMW iX3 · 2022</div>
+              <span style="font-size:9px;font-weight:700;background:rgba(124,63,204,.2);color:var(--pl);border:.5px solid rgba(124,63,204,.3);border-radius:4px;padding:1px 5px;">EV</span>
+            </div>
+            <div style="font-size:10px;color:var(--t5);">CCS2 · 100 kW · 285 km</div>
+          </div>
           <span style="font-size:11px;color:var(--pl);cursor:pointer;">Usar este</span>
         </div>
         <div style="background:var(--surface);border:.5px dashed rgba(255,255,255,.1);border-radius:14px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;cursor:pointer;">
           <div style="width:36px;height:36px;border-radius:10px;background:var(--gd);border:.5px solid var(--gb);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="ico" style="font-size:16px;color:var(--green);"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></div>
           <div style="flex:1;font-size:13px;color:var(--green);font-weight:500;">Cadastrar outro veículo</div>
           <span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
+        </div>
+
+        <!-- pegada verde -->
+        <div class="slabel" style="margin-bottom:10px;">Minha pegada verde</div>
+        <div style="background:linear-gradient(135deg,rgba(15,110,86,.25),rgba(170,255,62,.08));border:.5px solid rgba(170,255,62,.2);border-radius:16px;padding:14px;margin-bottom:14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+            <span class="ico" style="font-size:18px;color:var(--green);"><svg viewBox="0 0 24 24"><path d="M12 2a9 9 0 0 1 9 9c0 5-9 13-9 13S3 16 3 11a9 9 0 0 1 9-9z"/><circle cx="12" cy="11" r="3"/></svg></span>
+            <div style="font-size:13px;font-weight:700;color:var(--t1);">Desde janeiro de 2024</div>
+            <span style="margin-left:auto;font-size:10px;background:rgba(170,255,62,.12);color:var(--green);border:.5px solid rgba(170,255,62,.25);border-radius:100px;padding:2px 8px;font-weight:600;">🌿 Nível: Condutor Verde</span>
+          </div>
+          <!-- grid de métricas -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;">
+            <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:9px;color:var(--t4);margin-bottom:3px;">CO₂ evitado</div>
+              <div style="font-size:20px;font-weight:800;color:var(--green);line-height:1;font-family:'Sora',sans-serif;">312 <span style="font-size:11px;font-weight:500;">kg</span></div>
+              <div style="font-size:9px;color:var(--t3);margin-top:3px;">= 14 árvores plantadas 🌱</div>
+            </div>
+            <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:9px;color:var(--t4);margin-bottom:3px;">km em modo elétrico</div>
+              <div style="font-size:20px;font-weight:800;color:var(--t1);line-height:1;font-family:'Sora',sans-serif;">2.600 <span style="font-size:11px;font-weight:500;">km</span></div>
+              <div style="font-size:9px;color:var(--t3);margin-top:3px;">vs 0 km a combustão</div>
+            </div>
+            <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:9px;color:var(--t4);margin-bottom:3px;">Energia limpa usada</div>
+              <div style="font-size:20px;font-weight:800;color:var(--t1);line-height:1;font-family:'Sora',sans-serif;">487 <span style="font-size:11px;font-weight:500;">kWh</span></div>
+              <div style="font-size:9px;color:var(--t3);margin-top:3px;">em 12 recargas</div>
+            </div>
+            <div style="background:rgba(0,0,0,.25);border-radius:10px;padding:10px 12px;">
+              <div style="font-size:9px;color:var(--t4);margin-bottom:3px;">Economia vs gasolina</div>
+              <div style="font-size:20px;font-weight:800;color:var(--green);line-height:1;font-family:'Sora',sans-serif;">R$ 890</div>
+              <div style="font-size:9px;color:var(--t3);margin-top:3px;">nos últimos 12 meses</div>
+            </div>
+          </div>
+          <!-- streak -->
+          <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:18px;">🔥</span>
+            <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:var(--t1);">18 dias consecutivos elétrico</div><div style="font-size:10px;color:var(--t4);">Recorde pessoal: 24 dias</div></div>
+            <div style="text-align:right;"><div style="font-size:11px;font-weight:700;color:var(--green);">+50 créditos</div><div style="font-size:9px;color:var(--t4);">bônus de streak</div></div>
+          </div>
         </div>
 
         <div class="slabel" style="margin-bottom:10px;">Favoritos</div>
@@ -929,6 +1013,8 @@ function selectEmoji(type){
   const t=document.getElementById(map[type]);
   if(t){t.classList.add('selected');const lbl=t.querySelector('.emoji-label');if(lbl)lbl.style.color='var(--t1)';}
 }
+function showCarPicker(){const p=document.getElementById('carPicker');if(p)p.style.display='block';}
+function hideCarPicker(){const p=document.getElementById('carPicker');if(p)p.style.display='none';}
 document.querySelectorAll('.srow').forEach(row=>{
   const btns=row.querySelectorAll('.sbtn');
   btns.forEach((b,i)=>{b.addEventListener('click',()=>{btns.forEach((x,j)=>{x.classList.toggle('fil',j<=i);x.classList.toggle('emp',j>i);});});});
