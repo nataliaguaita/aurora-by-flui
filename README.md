@@ -164,5 +164,5 @@ Implementada com 3 camadas de `border-radius: 50%` com `filter: blur()` e anima�
 
 ## Links
 
-- Protótipo app: `app.html`
-- Protótipo web: `web.html`
+- Protótipo app: `https://nataliaguaita.github.io/aurora-by-flui/app.html`
+- Protótipo web: `https://nataliaguaita.github.io/aurora-by-flui/web.html`
