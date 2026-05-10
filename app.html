@@ -65,6 +65,8 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
 .btn-p{background:var(--green);color:#0a1400;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:700;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;width:100%;transition:opacity .15s,transform .1s;}
 .btn-p:active{opacity:.85;transform:scale(.98);}
 .btn-s{background:rgba(255,255,255,.05);border:.5px solid var(--b2);color:var(--pl);border-radius:14px;padding:12px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;width:100%;}
+.icon-btn.fav-on{color:#FF5F5F;}
+.icon-btn.fav-on svg path{fill:#FF5F5F;stroke:none;}
 .photo-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px;margin-bottom:14px;}
 .photo-scroll::-webkit-scrollbar{display:none;}
 .photo-card{flex-shrink:0;width:116px;height:82px;border-radius:12px;border:.5px solid var(--b1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;overflow:hidden;}
@@ -542,6 +544,7 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
       <span class="top-title">Ficha do ponto</span>
       <div style="display:flex;gap:8px;">
         <div class="icon-btn" style="color:var(--pl);" onclick="goTo('trip')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span></div>
+        <div class="icon-btn" id="btn-fav" onclick="toggleFav(this)"><span class="ico"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span></div>
         <div class="icon-btn"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0M18 6m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0-6 0M8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4"/></svg></span></div>
       </div>
     </div>
@@ -947,7 +950,8 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
       <div class="stop-card"><div class="stop-num">1</div><div class="stop-info"><div class="stop-name">Flui Tijucas</div><div class="stop-detail">BR-101, km 162 · chegada com ~28% de bateria</div></div><span class="stop-time">+22 min</span></div>
       <div class="stop-card"><div class="stop-num">2</div><div class="stop-info"><div class="stop-name">Flui Palhoça</div><div class="stop-detail">Av. Eng. Max Mauel, 900 · chegada com ~35%</div></div><span class="stop-time">+18 min</span></div>
       <div class="stop-card" style="border-color:var(--gb);background:rgba(170,255,62,.04);"><div class="stop-num" style="background:var(--green);color:#0a1400;border:none;">✓</div><div class="stop-info"><div class="stop-name" style="color:var(--green);">Florianópolis — destino</div><div class="stop-detail">chegada estimada com ~42% de bateria</div></div><span class="stop-time" style="color:var(--pl);">15:40</span></div>
-      <div style="padding:14px 14px 24px;"><button class="btn-p" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18.5L3.5 7.5l17-3.5z"/></svg></span> Iniciar navegação</button></div>
+      <div style="padding:14px 14px 8px;"><button class="btn-p" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18.5L3.5 7.5l17-3.5z"/></svg></span> Iniciar navegação</button></div>
+      <div style="padding:0 14px 24px;"><button class="btn-s"><span class="ico"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg></span> Salvar viagem</button></div>
     </div>
     <div class="nav-bar">
       <div class="nav-item" onclick="goTo('map')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg></span><div class="nav-dot"></div></div>
@@ -1096,6 +1100,29 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
           </div>
         </div>
 
+        <div class="slabel" style="margin-bottom:10px;">Próximas viagens</div>
+        <div class="fcard" onclick="goTo('trip')">
+          <div class="hico" style="background:rgba(124,63,204,.1);color:var(--pl);flex-shrink:0;"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span></div>
+          <div class="fi">
+            <div class="fn">Curitiba → Florianópolis</div>
+            <div class="fa">462 km</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+            <span class="tag">Tesla Model 3</span>
+            <span class="tag">2 paradas</span>
+          </div>
+        </div>
+        <div class="fcard" onclick="goTo('trip')">
+          <div class="hico" style="background:rgba(124,63,204,.1);color:var(--pl);flex-shrink:0;"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span></div>
+          <div class="fi">
+            <div class="fn">São Paulo → Curitiba</div>
+            <div class="fa">408 km</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+            <span class="tag">Tesla Model 3</span>
+            <span class="tag">1 parada</span>
+          </div>
+        </div>
         <div class="slabel" style="margin-bottom:10px;">Favoritos</div>
         <div class="fcard" onclick="goTo('detail')"><div class="hico" style="background:var(--pd);color:var(--pl);flex-shrink:0;"><span class="ico"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span></div><div class="fi"><div class="fn">Flui Batel</div><div class="fa">Av. do Batel · 800m</div></div><span class="badge bg" style="font-size:10px;">Livre</span><span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span></div>
         <div class="fcard" onclick="goTo('detail')"><div class="hico" style="background:var(--pd);color:var(--pl);flex-shrink:0;"><span class="ico"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span></div><div class="fi"><div class="fn">Flui Água Verde</div><div class="fa">R. Dep. Westphalen</div></div><span class="badge bg" style="font-size:10px;">Livre</span><span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span></div>
@@ -1170,6 +1197,7 @@ function updateUI(){
   document.querySelectorAll('.sind').forEach((el,i)=>el.classList.toggle('on',i===idx));
 }
 function showGC(){const g=document.getElementById('gc');if(g)g.classList.add('vis');}
+function toggleFav(el){el.classList.toggle('fav-on');}
 let curStep=1;
 function goStep(n){curStep=n;updateStepUI();}
 function updateStepUI(){
