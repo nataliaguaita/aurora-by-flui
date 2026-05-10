@@ -65,6 +65,11 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
 .btn-p{background:var(--green);color:#0a1400;border:none;border-radius:14px;padding:13px;font-size:14px;font-weight:700;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;width:100%;transition:opacity .15s,transform .1s;}
 .btn-p:active{opacity:.85;transform:scale(.98);}
 .btn-s{background:rgba(255,255,255,.05);border:.5px solid var(--b2);color:var(--pl);border-radius:14px;padding:12px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;width:100%;}
+.photo-scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:2px;margin-bottom:14px;}
+.photo-scroll::-webkit-scrollbar{display:none;}
+.photo-card{flex-shrink:0;width:116px;height:82px;border-radius:12px;border:.5px solid var(--b1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;overflow:hidden;}
+.photo-card .pico{font-size:22px;color:rgba(255,255,255,.13);}
+.photo-card .ptag{font-size:9px;color:rgba(255,255,255,.2);font-weight:500;letter-spacing:.04em;}
 
 /* ═══════════════════════════════════════
    T1 SPLASH — AURORA BOREAL ANIMADA
@@ -564,6 +569,29 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
             <div class="crow"><div class="cdot" style="background:var(--green);"></div><div class="ci"><div class="cn">Ponto 2 · CCS2</div><div class="cs">150 kW · DC Fast Charge</div></div><span class="cst" style="color:var(--green);">Livre</span></div>
             <div class="crow"><div class="cdot" style="background:var(--amber);"></div><div class="ci"><div class="cn">Ponto 3 · CHAdeMO</div><div class="cs">50 kW · DC</div></div><span class="cst" style="color:var(--amber);">Ocupado</span></div>
             <div class="crow"><div class="cdot" style="background:var(--green);"></div><div class="ci"><div class="cn">Ponto 4 · Type 2</div><div class="cs">22 kW · AC</div></div><span class="cst" style="color:var(--green);">Livre</span></div>
+          </div>
+        </div>
+        <div class="slabel">Fotos do eletroposto</div>
+        <div class="photo-scroll">
+          <div class="photo-card" style="background:linear-gradient(135deg,#1c2238,#1a2035);">
+            <span class="ico pico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+            <span class="ptag">Fachada</span>
+          </div>
+          <div class="photo-card" style="background:linear-gradient(135deg,#1a2030,#1c1e2c);">
+            <span class="ico pico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+            <span class="ptag">Pontos de carga</span>
+          </div>
+          <div class="photo-card" style="background:linear-gradient(135deg,#1e1c30,#1a1f2a);">
+            <span class="ico pico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+            <span class="ptag">Estacionamento</span>
+          </div>
+          <div class="photo-card" style="background:linear-gradient(135deg,#1a2228,#1c2030);">
+            <span class="ico pico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+            <span class="ptag">Área interna</span>
+          </div>
+          <div class="photo-card" style="background:linear-gradient(135deg,#1c1e38,#191c2a);">
+            <span class="ico pico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+            <span class="ptag">Sinalização</span>
           </div>
         </div>
         <div class="slabel">Movimento estimado</div>
