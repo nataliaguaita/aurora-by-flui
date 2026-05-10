@@ -370,11 +370,11 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
 .pg1{position:absolute;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(124,63,204,.2) 0%,transparent 70%);top:-30px;left:-50px;pointer-events:none;}
 .pg2{position:absolute;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(170,255,62,.08) 0%,transparent 70%);top:40px;right:-20px;pointer-events:none;}
 .pavwrap{display:flex;flex-direction:column;align-items:center;padding:52px 0 20px;position:relative;z-index:1;}
-.pav{width:80px;height:80px;border-radius:50%;background:rgba(124,63,204,.35);border:2.5px solid rgba(170,255,62,.5);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--pl);margin-bottom:12px;}
+.pav{width:80px;height:80px;border-radius:50%;background:var(--purple);border:2.5px solid rgba(170,255,62,.5);display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--t1);margin-bottom:12px;}
 .pname{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:var(--t1);}
-.psub{font-size:12px;color:var(--t4);margin-top:4px;}
-.pstats{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--surface);border:.5px solid var(--b1);border-radius:16px;margin:0 14px 14px;overflow:hidden;}
-.pst{padding:14px 10px;text-align:center;border-right:.5px solid var(--b1);}
+.psub{font-size:12px;color:var(--t1);margin-top:4px;opacity:.7;}
+.pstats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;background:var(--surface);border:.5px solid var(--b1);border-radius:16px;margin:0 14px 14px;overflow:hidden;}
+.pst{padding:14px 6px;text-align:center;border-right:.5px solid var(--b1);}
 .pst:last-child{border-right:none;}
 .pstv{font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--t1);}
 .pstv.g{color:var(--green);}
@@ -474,7 +474,7 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
       <div class="rsv" style="left:120px;width:14px;"></div><div class="rsv" style="left:235px;width:14px;"></div>
       <div class="mb" style="top:8px;left:8px;width:50px;height:76px;"></div><div class="mb" style="top:8px;left:100px;width:70px;height:76px;"></div><div class="mb" style="top:8px;left:210px;width:74px;height:76px;"></div><div class="mb" style="top:8px;left:326px;width:42px;height:76px;"></div>
       <div class="mb" style="top:128px;left:8px;width:50px;height:76px;"></div><div class="mb" style="top:128px;left:100px;width:70px;height:76px;"></div><div class="mb" style="top:128px;left:210px;width:74px;height:76px;"></div><div class="mb" style="top:128px;left:326px;width:42px;height:76px;"></div>
-      <div class="mb" style="top:250px;left:8px;width:50px;height:84px;"></div><div class="mb" style="top:250px;left:100px;width:120px;height:84px;"></div><div class="mb" style="top:250px;left:326px;width:42px;height:84px;"></div>
+      <div class="mb" style="top:250px;left:8px;width:50px;height:84px;"></div><div class="mb" style="top:250px;left:100px;width:69px;height:84px;"></div><div class="mb" style="top:250px;left:210px;width:74px;height:84px;"></div><div class="mb" style="top:250px;left:326px;width:42px;height:84px;"></div>
       <div class="mb" style="top:380px;left:8px;width:50px;height:74px;"></div><div class="mb" style="top:380px;left:100px;width:70px;height:74px;"></div><div class="mb" style="top:380px;left:210px;width:74px;height:54px;"></div>
       <div class="myloc" style="left:188px;top:262px;"><div class="loc-out"><div class="loc-in"></div></div></div>
       <div class="pin pg sel" style="left:130px;top:202px;" onclick="showGC()"><div class="pbubble"><span class="ico" style="font-size:12px;"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span> Livre</div><div class="ptail"></div></div>
@@ -488,7 +488,12 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
           <div class="fchip-map"><span class="ico" style="font-size:12px;color:var(--green);"><svg viewBox="0 0 24 24"><circle cx="14" cy="6" r="2"/><path d="M4 6h8M16 6h4M8 12H4M20 12h-8"/><circle cx="10" cy="12" r="2"/><circle cx="17" cy="18" r="2"/><path d="M4 18h11M19 18h1"/></svg></span><span>Filtros</span></div>
         </div>
       </div>
-      <div class="fps"><div class="fp on">Aberto agora</div><div class="fp">CCS2</div><div class="fp">150kW+</div><div class="fp">+2</div></div>
+      <div class="fps">
+        <div class="fp" style="background:var(--pd);border-color:rgba(124,63,204,.35);color:var(--pl);font-weight:600;display:flex;align-items:center;gap:4px;"><span class="ico" style="font-size:10px;"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span>Model 3</div>
+        <div class="fp on">Aberto agora</div>
+        <div class="fp">Hospedagem</div>
+        <div class="fp">Restaurante</div>
+      </div>
       <div class="mctrl">
         <div class="mcb" style="color:var(--blue);"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18.5L3.5 7.5l17-3.5z"/></svg></span></div>
         <div class="mcb" style="color:var(--t2);"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span></div>
@@ -503,7 +508,12 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
           <div class="gc-stat"><div class="gc-sl">Potência</div><div class="gc-sv">150 kW</div></div>
           <div class="gc-stat"><div class="gc-sl">Avaliação</div><div class="gc-sv" style="color:var(--pl);">★ 4.1</div></div>
         </div>
-        <div class="gc-tags"><span class="tag">CCS2</span><span class="tag">CHAdeMO</span><span class="tag">Type 2</span><span class="tag">24h</span></div>
+        <div class="gc-tags">
+          <span class="tag" style="background:rgba(170,255,62,.12);border-color:rgba(170,255,62,.35);color:var(--green);font-weight:600;display:inline-flex;align-items:center;gap:4px;"><span class="ico" style="font-size:9px;"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span>CCS2 ✓</span>
+          <span class="tag">CHAdeMO</span>
+          <span class="tag">Type 2</span>
+          <span class="tag">24h</span>
+        </div>
         <div class="gc-acts">
           <button class="gc-nb" onclick="goTo('detail')"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18.5L3.5 7.5l17-3.5z"/></svg></span> Navegar até aqui</button>
           <div class="gc-ib gc-trip" onclick="goTo('trip')" title="Planejar viagem"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l4-8 4 4 4-6 4 10M3 21h18"/></svg></span></div>
@@ -592,10 +602,14 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
         <!-- veículo selecionado como filtro automático -->
         <div style="background:linear-gradient(135deg,rgba(124,63,204,.14),rgba(170,255,62,.06));border:.5px solid rgba(170,255,62,.2);border-radius:14px;padding:12px 14px;margin-bottom:14px;">
           <div style="display:flex;align-items:center;gap:10px;">
-            <div style="width:32px;height:32px;border-radius:9px;background:rgba(170,255,62,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="ico" style="font-size:15px;color:var(--green);"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span></div>
+            <div style="width:36px;height:36px;border-radius:10px;background:rgba(170,255,62,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="ico" style="font-size:16px;color:var(--green);"><svg viewBox="0 0 24 24"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M5 17H3v-4l2-5h14l2 5v4h-2M3 13h18"/></svg></span></div>
             <div style="flex:1;">
-              <div style="font-size:12px;font-weight:600;color:var(--t1);">Tesla Model 3 · CCS2 · 170kW</div>
-              <div style="font-size:10px;color:var(--green);margin-top:2px;">Mostrando apenas pontos compatíveis</div>
+              <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;">
+                <span style="font-size:13px;font-weight:700;color:var(--t1);">Tesla Model 3</span>
+                <span style="font-size:9px;font-weight:700;background:#1a3a00;color:var(--green);border:.5px solid rgba(170,255,62,.3);border-radius:4px;padding:1px 5px;">EV</span>
+                <span style="display:flex;align-items:center;gap:3px;font-size:9px;color:var(--blue);background:rgba(91,159,255,.1);border:.5px solid rgba(91,159,255,.25);border-radius:4px;padding:1px 5px;"><span class="ico" style="font-size:10px;color:var(--blue);"><svg viewBox="0 0 24 24"><path d="M7 17C5 15.5 4 13.9 4 12s1-3.5 3-4.8M17 7c2 1.5 3 3.1 3 5s-1 3.5-3 4.8M9.5 10.5C8.8 11.1 8.5 11.5 8.5 12s.3.9 1 1.5M14.5 13.5c.7-.6 1-.9 1-1.5s-.3-.9-1-1.5M12 12h.01"/></svg></span>Detectado</span>
+              </div>
+              <div style="font-size:10px;color:var(--t4);">CCS2 · 170 kW </div>
             </div>
             <span style="font-size:11px;color:var(--pl);cursor:pointer;white-space:nowrap;" onclick="goTo('profile')">Trocar →</span>
           </div>
@@ -610,9 +624,36 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
         <div class="ckrow"><div class="ckbox unc"></div><span class="cklbl">Hospedagem próxima</span></div>
       </div>
       <div class="rhead"><span class="rc">14 RESULTADOS</span><span class="rs">distância ↓</span></div>
-      <div class="rcard" onclick="goTo('detail')"><div class="rct"><div><div class="rcname">Flui Batel</div><div class="rcaddr">Av. do Batel · 800m</div></div><span class="badge bg">Livre</span></div><div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">150 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 4.1</span><span style="font-size:11px;color:var(--t4);">CCS2</span><span style="margin-left:auto;font-size:16px;color:var(--green);">→</span></div></div>
-      <div class="rcard" onclick="goTo('detail')"><div class="rct"><div><div class="rcname">Flui Água Verde</div><div class="rcaddr">R. Dep. Westphalen · 1.2km</div></div><span class="badge bg">Livre</span></div><div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">150 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 4.4</span><span style="font-size:11px;color:var(--t4);">CCS2</span><span style="margin-left:auto;font-size:16px;color:var(--green);">→</span></div></div>
-      <div class="rcard" onclick="goTo('detail')"><div class="rct"><div><div class="rcname">Flui Centro</div><div class="rcaddr">R. XV de Novembro · 2.1km</div></div><span class="badge ba">Ocupado</span></div><div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">50 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 3.8</span><span style="font-size:11px;color:var(--t4);">CHAdeMO</span><span style="margin-left:auto;font-size:16px;color:var(--t5);">→</span></div></div>
+      <div class="rcard" onclick="goTo('detail')" style="display:flex;gap:12px;align-items:stretch;">
+        <div style="width:68px;flex-shrink:0;border-radius:10px;background:#1a1f2e;border:.5px solid var(--b1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;overflow:hidden;">
+          <span class="ico" style="font-size:18px;color:var(--t5);"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+          <span style="font-size:8px;color:var(--t5);">foto</span>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div class="rct"><div><div class="rcname">Flui Batel</div><div class="rcaddr">Av. do Batel · 800m</div></div><span class="badge bg">Livre</span></div>
+          <div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">150 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 4.1</span><span style="font-size:11px;color:var(--t4);">CCS2</span><span style="margin-left:auto;font-size:16px;color:var(--green);">→</span></div>
+        </div>
+      </div>
+      <div class="rcard" onclick="goTo('detail')" style="display:flex;gap:12px;align-items:stretch;">
+        <div style="width:68px;flex-shrink:0;border-radius:10px;background:#1a1f2e;border:.5px solid var(--b1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;overflow:hidden;">
+          <span class="ico" style="font-size:18px;color:var(--t5);"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+          <span style="font-size:8px;color:var(--t5);">foto</span>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div class="rct"><div><div class="rcname">Flui Água Verde</div><div class="rcaddr">R. Dep. Westphalen · 1.2km</div></div><span class="badge bg">Livre</span></div>
+          <div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">150 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 4.4</span><span style="font-size:11px;color:var(--t4);">CCS2</span><span style="margin-left:auto;font-size:16px;color:var(--green);">→</span></div>
+        </div>
+      </div>
+      <div class="rcard" onclick="goTo('detail')" style="display:flex;gap:12px;align-items:stretch;">
+        <div style="width:68px;flex-shrink:0;border-radius:10px;background:#1a1f2e;border:.5px solid var(--b1);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;overflow:hidden;">
+          <span class="ico" style="font-size:18px;color:var(--t5);"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span>
+          <span style="font-size:8px;color:var(--t5);">foto</span>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div class="rct"><div><div class="rcname">Flui Centro</div><div class="rcaddr">R. XV de Novembro · 2.1km</div></div><span class="badge ba">Ocupado</span></div>
+          <div class="rcb"><span style="font-size:11px;font-weight:500;color:var(--t2);">50 kW</span><span style="font-size:11px;font-weight:500;color:var(--pl);">★ 3.8</span><span style="font-size:11px;color:var(--t4);">CHAdeMO</span><span style="margin-left:auto;font-size:16px;color:var(--t5);">→</span></div>
+        </div>
+      </div>
       <div style="height:20px;"></div>
     </div>
     <div class="nav-bar">
@@ -671,8 +712,8 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
           <div class="emoji-btn" id="eb3" onclick="selectEmoji('good')" style="border-color:var(--gb);background:var(--gd);" class="selected"><div class="emoji-face">😊</div><div class="emoji-label" style="color:var(--t1);">Boa</div></div>
         </div>
         <div style="padding:0 14px 16px;background:rgba(170,255,62,.06);margin:0 14px;border-radius:12px;border:.5px solid var(--gb);">
-          <div style="font-size:11px;color:var(--green);font-weight:600;padding-top:10px;margin-bottom:6px;">+5 créditos Flui</div>
-          <div style="font-size:11px;color:var(--t3);">só por avaliar você já ganha créditos para usar em recargas parceiras</div>
+          <div style="font-size:11px;color:var(--green);font-weight:600;padding-top:10px;margin-bottom:6px;">+5 Sparks</div>
+          <div style="font-size:11px;color:var(--t3);">só por avaliar você já ganha Sparks para usar em recargas parceiras</div>
         </div>
         <div style="height:16px;"></div>
         <div class="step-nav">
@@ -684,7 +725,7 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
       <div class="step-panel" id="step2">
         <div style="padding:0 18px 16px;">
           <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--t1);margin-bottom:4px;">Avalie por critério</div>
-          <div style="font-size:12px;color:var(--t4);">Etapa 2 de 3 · opcional · +15 créditos</div>
+          <div style="font-size:12px;color:var(--t4);">Etapa 2 de 3 · opcional · +15 Sparks</div>
         </div>
         <div class="ccard"><div class="cname">Disponibilidade</div><div class="cdesc">Carregadores livres ao chegar</div><div class="srow"><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn emp">★</div></div></div>
         <div class="ccard"><div class="cname">Qualidade</div><div class="cdesc">Estado dos equipamentos</div><div class="srow"><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div><div class="sbtn fil">★</div></div></div>
@@ -701,17 +742,17 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
       <div class="step-panel" id="step3">
         <div style="padding:0 18px 16px;">
           <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:800;color:var(--t1);margin-bottom:4px;">Quer contar mais?</div>
-          <div style="font-size:12px;color:var(--t4);">Etapa 3 de 3 · totalmente opcional · +20 créditos com foto</div>
+          <div style="font-size:12px;color:var(--t4);">Etapa 3 de 3 · totalmente opcional · +20 Sparks com foto</div>
         </div>
         <div class="cmtarea"><div class="cmtlbl">Comentário</div><div class="cmtph">Compartilhe sua experiência...</div></div>
         <div style="background:var(--surface);border:.5px solid var(--b1);border-radius:14px;padding:12px 14px;margin:0 14px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;">
           <div style="width:36px;height:36px;border-radius:10px;background:var(--pd);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--pl);"><span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></span></div>
-          <div style="flex:1;"><div style="font-size:13px;color:var(--t2);font-weight:500;">Adicionar foto</div><div style="font-size:10px;color:var(--t4);margin-top:2px;">+10 créditos por foto aprovada</div></div>
+          <div style="flex:1;"><div style="font-size:13px;color:var(--t2);font-weight:500;">Adicionar foto</div><div style="font-size:10px;color:var(--t4);margin-top:2px;">+10 Sparks por foto aprovada</div></div>
           <span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>
         </div>
         <div class="credit-card">
-          <div class="credit-label">Créditos que você vai ganhar</div>
-          <div class="credit-val">+40 créditos</div>
+          <div class="credit-label">Sparks que você vai ganhar</div>
+          <div class="credit-val">+40 Sparks</div>
           <div class="credit-sub">= R$ 2,00 em recargas parceiras</div>
         </div>
         <div class="step-nav">
@@ -731,26 +772,61 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
       <div style="width:36px;"></div>
     </div>
     <div class="scroll">
-      <div class="trip-hero">
+      <!-- hero aurora completa -->
+      <div class="trip-hero" style="background:#060414;padding:26px 18px 28px;">
+        <!-- camadas de aurora -->
+        <div class="aurora-bg">
+          <div class="aurora-layer al1"></div>
+          <div class="aurora-layer al2"></div>
+          <div class="aurora-layer al3"></div>
+        </div>
+        <!-- elétrons flutuantes -->
+        <div class="electrons">
+          <div class="electron e1"><div class="edot edot-g"></div></div>
+          <div class="electron e2"><div class="edot edot-p"></div></div>
+          <div class="electron e3"><div class="edot edot-b"></div></div>
+          <div class="electron e4"><div class="edot edot-g"></div></div>
+          <div class="electron e5"><div class="edot edot-p"></div></div>
+        </div>
+        <!-- linhas de conexão animadas -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" viewBox="0 0 375 150" preserveAspectRatio="none">
+          <line x1="40"  y1="20"  x2="190" y2="95"  stroke="rgba(170,255,62,.4)"  stroke-width="1" stroke-dasharray="30 170" class="eline" style="animation-delay:0s"/>
+          <line x1="190" y1="12"  x2="335" y2="80"  stroke="rgba(184,125,255,.4)" stroke-width="1" stroke-dasharray="25 175" class="eline" style="animation-delay:1.4s"/>
+          <line x1="100" y1="8"   x2="335" y2="80"  stroke="rgba(91,159,255,.3)"  stroke-width="1" stroke-dasharray="20 180" class="eline" style="animation-delay:.8s"/>
+          <line x1="40"  y1="20"  x2="335" y2="80"  stroke="rgba(170,255,62,.25)" stroke-width="1" stroke-dasharray="15 185" class="eline" style="animation-delay:2s"/>
+        </svg>
+        <!-- estrelas estáticas -->
+        <div style="position:absolute;inset:0;pointer-events:none;">
+          <div style="position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.3;top:18%;left:8%;animation:twinkle 3s ease-in-out infinite;animation-delay:.4s;"></div>
+          <div style="position:absolute;width:1.5px;height:1.5px;border-radius:50%;background:#fff;opacity:.2;top:35%;left:22%;animation:twinkle 4s ease-in-out infinite;animation-delay:1.1s;"></div>
+          <div style="position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.35;top:12%;left:55%;animation:twinkle 3.5s ease-in-out infinite;animation-delay:.7s;"></div>
+          <div style="position:absolute;width:1.5px;height:1.5px;border-radius:50%;background:#fff;opacity:.25;top:60%;left:75%;animation:twinkle 5s ease-in-out infinite;animation-delay:2s;"></div>
+          <div style="position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.3;top:25%;left:88%;animation:twinkle 3.8s ease-in-out infinite;animation-delay:.3s;"></div>
+          <div style="position:absolute;width:1.5px;height:1.5px;border-radius:50%;background:#fff;opacity:.2;top:70%;left:40%;animation:twinkle 4.5s ease-in-out infinite;animation-delay:1.6s;"></div>
+        </div>
+        <!-- glow roxo canto -->
         <div class="trip-hero-glow"></div>
-        <div class="trip-title">Planeje sua rota</div>
-        <div class="trip-sub">Calculamos as paradas de recarga ideais para você</div>
+        <!-- conteúdo -->
+        <div style="position:relative;z-index:1;">
+          <div class="trip-title">Planeje sua rota</div>
+          <div class="trip-sub">Calculamos as paradas de recarga ideais para você</div>
+        </div>
       </div>
       <div style="height:14px;background:var(--base);"></div>
+      <!-- 1. card origem→destino -->
       <div class="route-card">
         <div class="route-input">
           <div class="route-dot" style="background:var(--blue);box-shadow:0 0 6px var(--blue);"></div>
           <span class="route-label">Origem</span>
           <span class="route-val">Curitiba, PR</span>
         </div>
-        <div style="display:flex;margin-left:4px;padding:3px 0;"><div style="width:1px;height:12px;background:rgba(255,255,255,.1);"></div></div>
         <div class="route-input">
           <div class="route-dot" style="background:var(--green);box-shadow:0 0 6px var(--green);"></div>
           <span class="route-label">Destino</span>
           <span class="route-val">Florianópolis, SC</span>
         </div>
       </div>
-      <!-- card veículo com bluetooth -->
+      <!-- 2. card veículo com bluetooth -->
       <div style="background:var(--surface);border:.5px solid rgba(170,255,62,.25);border-radius:14px;padding:12px 14px;margin:0 14px 12px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
           <div style="width:38px;height:38px;border-radius:10px;background:rgba(170,255,62,.1);border:.5px solid rgba(170,255,62,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -794,6 +870,47 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
         </div>
         <div style="text-align:center;cursor:pointer;" onclick="hideCarPicker()"><span style="font-size:12px;color:var(--t4);">Fechar</span></div>
       </div>
+      <!-- 3. mini mapa da rota -->
+      <div style="margin:0 14px 12px;border-radius:14px;background:#12151f;border:.5px solid var(--b1);overflow:hidden;position:relative;">
+        <svg viewBox="0 0 320 178" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+          <rect width="320" height="178" fill="#12151f"/>
+          <line x1="0" y1="60" x2="320" y2="60" stroke="#1e2230" stroke-width="8"/>
+          <line x1="0" y1="118" x2="320" y2="118" stroke="#1e2230" stroke-width="6"/>
+          <line x1="80" y1="0" x2="80" y2="178" stroke="#1e2230" stroke-width="6"/>
+          <line x1="210" y1="0" x2="210" y2="178" stroke="#1e2230" stroke-width="6"/>
+          <line x1="0" y1="89" x2="320" y2="89" stroke="#1a1f2c" stroke-width="3"/>
+          <line x1="145" y1="0" x2="145" y2="178" stroke="#1a1f2c" stroke-width="3"/>
+          <rect x="8"   y="8"   width="64" height="44" rx="3" fill="#161b28"/>
+          <rect x="90"  y="8"   width="112" height="44" rx="3" fill="#161b28"/>
+          <rect x="218" y="8"   width="94" height="44" rx="3" fill="#161b28"/>
+          <rect x="8"   y="68"  width="64" height="42" rx="3" fill="#161b28"/>
+          <rect x="90"  y="68"  width="112" height="42" rx="3" fill="#161b28"/>
+          <rect x="218" y="68"  width="94" height="42" rx="3" fill="#161b28"/>
+          <rect x="8"   y="126" width="64" height="44" rx="3" fill="#161b28"/>
+          <rect x="90"  y="126" width="112" height="44" rx="3" fill="#161b28"/>
+          <rect x="218" y="126" width="94" height="44" rx="3" fill="#161b28"/>
+          <path d="M 52,28 C 70,42 95,55 122,68 C 148,80 168,90 192,104 C 216,118 248,134 275,152" stroke="rgba(170,255,62,.18)" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M 52,28 C 70,42 95,55 122,68 C 148,80 168,90 192,104 C 216,118 248,134 275,152" stroke="#AAFF3E" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="6 4"/>
+          <circle cx="122" cy="68" r="10" fill="#13131A" stroke="#FFB23E" stroke-width="2"/>
+          <text x="122" y="72" text-anchor="middle" font-size="9" fill="#FFB23E" font-family="sans-serif" font-weight="700">1</text>
+          <rect x="134" y="58" width="52" height="18" rx="4" fill="rgba(255,178,62,.15)" stroke="rgba(255,178,62,.3)" stroke-width=".5"/>
+          <text x="160" y="70" text-anchor="middle" font-size="8" fill="#FFB23E" font-family="sans-serif">Tijucas</text>
+          <circle cx="192" cy="104" r="10" fill="#13131A" stroke="#FFB23E" stroke-width="2"/>
+          <text x="192" y="108" text-anchor="middle" font-size="9" fill="#FFB23E" font-family="sans-serif" font-weight="700">2</text>
+          <rect x="204" y="94" width="52" height="18" rx="4" fill="rgba(255,178,62,.15)" stroke="rgba(255,178,62,.3)" stroke-width=".5"/>
+          <text x="230" y="106" text-anchor="middle" font-size="8" fill="#FFB23E" font-family="sans-serif">Palhoça</text>
+          <circle cx="52" cy="28" r="8" fill="#5B9FFF" opacity=".9"/>
+          <circle cx="52" cy="28" r="4" fill="#fff"/>
+          <text x="66" y="22" font-size="8.5" fill="#aaa" font-family="sans-serif">Curitiba</text>
+          <text x="66" y="33" font-size="7.5" fill="#5B9FFF" font-family="sans-serif">Origem</text>
+          <circle cx="275" cy="152" r="10" fill="#AAFF3E" opacity=".95"/>
+          <circle cx="275" cy="152" r="5" fill="#0a1400"/>
+          <text x="224" y="148" font-size="8.5" fill="#aaa" font-family="sans-serif" text-anchor="end">Florianópolis</text>
+          <text x="224" y="159" font-size="7.5" fill="#AAFF3E" font-family="sans-serif" text-anchor="end">Destino</text>
+          <text x="160" y="173" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,.25)" font-family="sans-serif">~300 km · BR-101</text>
+        </svg>
+      </div>
+      <!-- 4. lista de paradas -->
       <div class="offline-banner">
         <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 5v6m0 4h.01"/></svg></span>
         <span class="offline-txt">Dados da rota salvos offline · funciona sem internet</span>
@@ -816,7 +933,40 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
   <div class="screen" id="s-profile">
     <div class="status-bar" style="position:relative;z-index:10;"><span class="status-time">9:41</span><div class="status-icons"><span class="ico"><svg viewBox="0 0 24 24"><path d="M6 16v-8M10 16v-4M14 16v-6M18 16v-4M14 12h4"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 18h.01M8.5 14.5A5 5 0 0 1 12 13a5 5 0 0 1 3.5 1.5M5 11a10 10 0 0 1 14 0M2 8a15 15 0 0 1 20 0"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M20 11h2v2h-2zM6 11h6"/></svg></span></div></div>
     <div class="scroll">
-      <div class="phero"><div class="pg1"></div><div class="pg2"></div>
+      <div class="phero" style="background:#060414;">
+        <!-- aurora completa -->
+        <div class="aurora-bg">
+          <div class="aurora-layer al1"></div>
+          <div class="aurora-layer al2"></div>
+          <div class="aurora-layer al3"></div>
+        </div>
+        <!-- elétrons flutuantes -->
+        <div class="electrons">
+          <div class="electron e1"><div class="edot edot-g"></div></div>
+          <div class="electron e2"><div class="edot edot-p"></div></div>
+          <div class="electron e3"><div class="edot edot-b"></div></div>
+          <div class="electron e4"><div class="edot edot-g"></div></div>
+          <div class="electron e5"><div class="edot edot-p"></div></div>
+        </div>
+        <!-- linhas animadas -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" viewBox="0 0 375 180" preserveAspectRatio="none">
+          <line x1="40"  y1="20"  x2="190" y2="110" stroke="rgba(170,255,62,.4)"  stroke-width="1" stroke-dasharray="30 170" class="eline" style="animation-delay:0s"/>
+          <line x1="190" y1="15"  x2="335" y2="100" stroke="rgba(184,125,255,.4)" stroke-width="1" stroke-dasharray="25 175" class="eline" style="animation-delay:1.4s"/>
+          <line x1="100" y1="8"   x2="335" y2="100" stroke="rgba(91,159,255,.3)"  stroke-width="1" stroke-dasharray="20 180" class="eline" style="animation-delay:.8s"/>
+          <line x1="40"  y1="20"  x2="335" y2="100" stroke="rgba(170,255,62,.25)" stroke-width="1" stroke-dasharray="15 185" class="eline" style="animation-delay:2s"/>
+        </svg>
+        <!-- estrelas -->
+        <div style="position:absolute;inset:0;pointer-events:none;">
+          <div style="position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.3;top:15%;left:8%;animation:twinkle 3s ease-in-out infinite;animation-delay:.4s;"></div>
+          <div style="position:absolute;width:1.5px;height:1.5px;border-radius:50%;background:#fff;opacity:.2;top:30%;left:25%;animation:twinkle 4s ease-in-out infinite;animation-delay:1.1s;"></div>
+          <div style="position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.35;top:10%;left:60%;animation:twinkle 3.5s ease-in-out infinite;animation-delay:.7s;"></div>
+          <div style="position:absolute;width:1.5px;height:1.5px;border-radius:50%;background:#fff;opacity:.25;top:55%;left:78%;animation:twinkle 5s ease-in-out infinite;animation-delay:2s;"></div>
+          <div style="position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.3;top:20%;left:88%;animation:twinkle 3.8s ease-in-out infinite;animation-delay:.3s;"></div>
+          <div style="position:absolute;width:1.5px;height:1.5px;border-radius:50%;background:#fff;opacity:.2;top:68%;left:42%;animation:twinkle 4.5s ease-in-out infinite;animation-delay:1.6s;"></div>
+        </div>
+        <!-- glow roxo -->
+        <div class="trip-hero-glow"></div>
+        <!-- avatar + nome -->
         <div class="pavwrap"><div class="pav">AS</div><div class="pname">Ana Silva</div><div class="psub">Motorista EV · desde 2023</div></div>
       </div>
       <div style="height:16px;background:var(--base);"></div>
@@ -824,6 +974,7 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
         <div class="pst"><div class="pstv g">12</div><div class="pstl">Recargas</div></div>
         <div class="pst"><div class="pstv">4</div><div class="pstl">Favoritos</div></div>
         <div class="pst"><div class="pstv p">★ 4.3</div><div class="pstl">Avaliações</div></div>
+        <div class="pst"><div class="pstv" style="color:var(--amber);">320</div><div class="pstl" style="color:var(--amber);opacity:.8;">Sparks</div></div>
       </div>
       <div class="pad">
         <!-- carro selecionado -->
@@ -913,13 +1064,13 @@ body{background:#060609;display:flex;align-items:center;justify-content:center;m
           <div style="background:rgba(0,0,0,.2);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;">
             <span style="font-size:18px;">🔥</span>
             <div style="flex:1;"><div style="font-size:11px;font-weight:600;color:var(--t1);">18 dias consecutivos elétrico</div><div style="font-size:10px;color:var(--t4);">Recorde pessoal: 24 dias</div></div>
-            <div style="text-align:right;"><div style="font-size:11px;font-weight:700;color:var(--green);">+50 créditos</div><div style="font-size:9px;color:var(--t4);">bônus de streak</div></div>
+            <div style="text-align:right;"><div style="font-size:11px;font-weight:700;color:var(--green);">+50 Sparks</div><div style="font-size:9px;color:var(--t4);">bônus de streak</div></div>
           </div>
         </div>
 
         <div class="slabel" style="margin-bottom:10px;">Favoritos</div>
-        <div class="fcard" onclick="goTo('detail')"><div class="fdot" style="background:var(--green);"></div><div class="fi"><div class="fn">Flui Batel</div><div class="fa">Av. do Batel · 800m</div></div><span class="badge bg" style="font-size:10px;">Livre</span><span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span></div>
-        <div class="fcard" onclick="goTo('detail')"><div class="fdot" style="background:var(--green);"></div><div class="fi"><div class="fn">Flui Água Verde</div><div class="fa">R. Dep. Westphalen</div></div><span class="badge bg" style="font-size:10px;">Livre</span><span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span></div>
+        <div class="fcard" onclick="goTo('detail')"><div class="hico" style="background:var(--pd);color:var(--pl);flex-shrink:0;"><span class="ico"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span></div><div class="fi"><div class="fn">Flui Batel</div><div class="fa">Av. do Batel · 800m</div></div><span class="badge bg" style="font-size:10px;">Livre</span><span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span></div>
+        <div class="fcard" onclick="goTo('detail')"><div class="hico" style="background:var(--pd);color:var(--pl);flex-shrink:0;"><span class="ico"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span></div><div class="fi"><div class="fn">Flui Água Verde</div><div class="fa">R. Dep. Westphalen</div></div><span class="badge bg" style="font-size:10px;">Livre</span><span class="ico" style="font-size:16px;color:var(--t5);"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span></div>
         <div class="slabel" style="margin:14px 0 10px;">Histórico recente</div>
         <div class="hcard"><div class="hico"><span class="ico"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span></div><div class="hi"><div class="hn">Flui Batel</div><div class="hd">Hoje, 10:23</div></div><span class="hkw">32 kWh · 22 min</span></div>
         <div class="hcard"><div class="hico"><span class="ico"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h8l-1 7 9-11h-8l1-7z"/></svg></span></div><div class="hi"><div class="hn">Flui Shopping Mueller</div><div class="hd">Ontem, 18:45</div></div><span class="hkw">18 kWh · 14 min</span></div>
