@@ -155,7 +155,7 @@ Implementada com 3 camadas de `border-radius: 50%` com `filter: blur()` e anima√
 | Nome | RM |
 |------|------|
 | Natalia Guaita | RM560106 |
-| Patricia Eihara | RM |
+| Patricia Eihara | RM559419 |
 | Rafael Santos | RM560567 |
 
 ---
