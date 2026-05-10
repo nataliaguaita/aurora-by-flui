@@ -152,17 +152,15 @@ Implementada com 3 camadas de `border-radius: 50%` com `filter: blur()` e anima�
 
 ## Integrantes
 
-*(Adicionar nomes em ordem alfabética e RMs conforme instrução do desafio)*
-
-| Nome |
-|------|
-| Natalia Guaita |
-| Patricia Eihara |
-| Rafael Santos |
+| Nome | RM |
+|------|------|
+| Natalia Guaita | RM560106 |
+| Patricia Eihara | RM |
+| Rafael Santos | RM560567 |
 
 ---
 
 ## Links
 
-- Protótipo app: `https://nataliaguaita.github.io/aurora-by-flui/app.html`
-- Protótipo web: `https://nataliaguaita.github.io/aurora-by-flui/web.html`
+- Protótipo app: https://nataliaguaita.github.io/aurora-by-flui/app.html
+- Protótipo web: https://nataliaguaita.github.io/aurora-by-flui/web.html
